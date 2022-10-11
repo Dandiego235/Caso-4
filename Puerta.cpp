@@ -25,7 +25,7 @@ class Puerta {
 
         void generarCamara(){
             int random = Random::rand_num(0, 3);
-            if (random < 2){
+            if (random < 1){
                 camara = new Camara();
             } else {
                 camara = nullptr;
@@ -43,9 +43,9 @@ class Puerta {
                 for (int cantDoor = 0; cantDoor < doorQuantity; cantDoor++){
                     Puerta* newPuerta = new Puerta(puertaPtr, contadorPuertas++); // meter con otro constructor
                     puertaPtr->getListaPuertas()->add(newPuerta); // le agregamos la nueva puerta a la puerta al que le generamos puertas.
-                    newPuerta->setQuantity(doorQuantity + 1); // establecemos la cantidad de puertas 
                     colaPuertas->enqueue(newPuerta); // encolamos la nueva puerta generada para luego generar sus puertas.
                 }
+                puertaPtr->setQuantity(doorQuantity + 1); // establecemos la cantidad de puertas. + 1 porque ya tiene la puerta que la generó.
             }
             totalPuertas = contadorPuertas - 1;
         }
@@ -73,6 +73,7 @@ class Puerta {
             listaPuertas = new List<Puerta>();
             listaPuertas->add(pPuerta);
             generarCamara(); // creamos la camara
+            quantity = 1; // ya tiene la puerta que la generó.
         }
 
         int getId(){
@@ -89,6 +90,10 @@ class Puerta {
 
         List<Puerta>* getListaPuertas(){
             return listaPuertas;
+        }
+
+        Camara* getCamara(){
+            return camara;
         }
 
         void printNetwork(){
