@@ -5,10 +5,11 @@
 #include <thread>
 #include <iostream>
 #include "../Puerta.cpp"
+#include "Personaje.h"
 
 using namespace std;
 
-class Explorador : Personaje{
+class Explorador : public Personaje{
     public:
         Explorador(bool pJugador, Puerta *pPuerta){
             jugador = pJugador;
@@ -29,7 +30,7 @@ class Explorador : Personaje{
                     int index = Random::rand_num(0,puerta->getQuantity());
                     // obtenemos un índice de 0 a la cantidad de puertas a las que lleva donde estamos.
                     puerta = puerta->getListaPuertas()->find(index); // entramsos en la puerta
-                    cout << index << " " << puerta->getId() << endl;
+                    //cout << index << " " << puerta->getId() << endl;
                 } else {
                     camara = puerta->getCamara();
                     cout << "El " << name << " encontró una cámara en la puerta " << puerta->getId() << endl;
@@ -37,7 +38,7 @@ class Explorador : Personaje{
                     // obtenemos un índice de 0 a la cantidad de puertas a las que lleva donde estamos.
 
                     puerta = puerta->getListaPuertas()->find(index); // entramsos en la puerta
-                    cout << index << " " << puerta->getId() << endl;
+                    //cout << index << " " << puerta->getId() << endl;
                 }
                 this_thread::sleep_for(seconds(1));
             }

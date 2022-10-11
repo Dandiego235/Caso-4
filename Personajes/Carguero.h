@@ -1,14 +1,15 @@
-#ifndef EXPLORADOR
+#ifndef CARGUERO
 
-#define EXPLORADOR 1
+#define CARGUERO 1
 
 #include <thread>
 #include <iostream>
 #include "../Puerta.cpp"
+#include "Personaje.h"
 
 using namespace std;
 
-class Carguero : Personaje{
+class Carguero : public Personaje{
     public:
         Carguero(bool pJugador, Puerta *pPuerta){
             jugador = pJugador;
@@ -29,7 +30,7 @@ class Carguero : Personaje{
                     int index = Random::rand_num(0,puerta->getQuantity());
                     // obtenemos un índice de 0 a la cantidad de puertas a las que lleva donde estamos.
                     puerta = puerta->getListaPuertas()->find(index); // entramsos en la puerta
-                    cout << index << " " << puerta->getId() << endl;
+                    //cout << index << " " << puerta->getId() << endl;
                 } else {
                     camara = puerta->getCamara();
                     cout << "El " << name << " encontró una cámara en la puerta " << puerta->getId() << endl;
@@ -37,7 +38,7 @@ class Carguero : Personaje{
                     // obtenemos un índice de 0 a la cantidad de puertas a las que lleva donde estamos.
 
                     puerta = puerta->getListaPuertas()->find(index); // entramsos en la puerta
-                    cout << index << " " << puerta->getId() << endl;
+                    //cout << index << " " << puerta->getId() << endl;
                 }
                 this_thread::sleep_for(seconds(1));
             }
