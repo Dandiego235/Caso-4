@@ -50,15 +50,14 @@ int main(){
                 cout << "ERROR: La opción ingresada no es válida" << endl;
                 continue;
         }
-        threadsAzules[minero++] = new thread(&Personaje::play, personajePtr, &timerThread);
+        threadsAzules[minero++] = new thread(&Personaje::play, personajePtr);
     }
 
     cout.rdbuf(orig_buf);
-
-    timerThread.join();
     for(int index = 0; index < CANT_MINEROS; index++){
-        threadsAzules[index]->join();
+        threadsAzules[index]->detach();
     }
+    timerThread.join();
 
     /*
 

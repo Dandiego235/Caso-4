@@ -11,7 +11,7 @@ class Personaje{
         Puerta *puerta;
         Camara *camara;
     public:
-        virtual void play(thread *pThread) = 0;
+        virtual void play() = 0;
 };
 
 #endif

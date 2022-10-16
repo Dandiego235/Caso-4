@@ -22,8 +22,8 @@ class Carguero : public Personaje{
             camara = nullptr;
         }
 
-        void play(thread *pThread){
-            while (pThread->joinable()){
+        void play(){
+            while (true){
                 
                 cout << "El " << name << " está en la Puerta " << puerta->getId() << endl;
                 if (!puerta->getCamara()){
