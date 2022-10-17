@@ -2,7 +2,12 @@
 #include "RandomGen.cpp"
 #include <iostream>
 
+#ifndef CAMARA
+
+#define CAMARA 1
+
 #define MAX_DISTANCE 720
+#define MAX_CAMARAS 650
 
 using namespace std;
 
@@ -15,39 +20,33 @@ class Camara{
         int totalDistRight;
         int distanciaGen;
         int cantMineral;
-
+        int mineralGenerado;
+        long contador;
     public:
         Camara(){
             raiz = nullptr;
-            totalMineral = 200; //Random::rand_num(200, 600); // generamos un número máximo de minerales que puede haber en la 
+            totalMineral = Random::rand_num(200, 600); // generamos un número máximo de minerales que puede haber en la 
             maxDistancia = 0;
             totalDistLeft = 0;
             totalDistRight = 0;
-            int mineralGenerado = 0;
-            
+            mineralGenerado = 0;
+            contador = 0;
 
-            while (mineralGenerado < totalMineral && maxDistancia < MAX_DISTANCE){
+            cout << totalMineral << endl;            
+            cantMineral = 1;
+            distanciaGen = 10;
+            while (contador < MAX_CAMARAS && mineralGenerado < totalMineral && maxDistancia < MAX_DISTANCE){
                 cantMineral = Random::rand_num(1, 20); //generamos la cantidad de mineral en la camara.
                 distanciaGen = Random::rand_num(10, 80);
                 if (mineralGenerado + cantMineral > totalMineral){
                     cantMineral = totalMineral - mineralGenerado;
                     // si nos pasamos de la cantidad de mineral, simplemente cogemos lo que falta para llegar al límite
                 }
-                SubCamara* parentNode = findParent(cantMineral * distanciaGen); // buscamos el que sería el padre.
-                if (parentNode){
-                    int distanciaPadre = parentNode->getDistanciaTotal();
-                    if (distanciaPadre + distanciaGen > MAX_DISTANCE){
-                        distanciaGen = MAX_DISTANCE - distanciaPadre; 
-                    }
-                    if (distanciaPadre + distanciaGen > maxDistancia){
-                        maxDistancia = distanciaPadre + distanciaGen;
-                    }
-                }
-                AVL_insert(parentNode, raiz, distanciaGen * cantMineral);
-                mineralGenerado += cantMineral;
-                printTree();
-                cin;
+                AVL_insert(nullptr, raiz, distanciaGen * cantMineral);
+                // cout << contador << " Mineral: " << cantMineral << " Distancia: " << distanciaGen << endl;
             }
+            printTree();
+            cout << contador << " Mineral generado: " << mineralGenerado << " Maxdistance: " << maxDistancia << endl;
         }
         /*
             Function to get the height of the tree
@@ -75,6 +74,8 @@ class Camara{
             if (!raiz){
                 raiz = node;
             }
+            mineralGenerado += cantMineral;
+            contador++;
             return(node);
         }
 
@@ -208,14 +209,39 @@ class Camara{
             if (root == NULL)
                 return(newSubCamara(par, key));
 
-            if (key < root->getPotencial())
+            if (key < root->getPotencial()){
+                if (!root->getLeft()){ // si no hay hijo izquierdo, estamos en el que será el nuevo padre.
+                    int distanciaPadre = root->getDistanciaTotal();
+                    if (distanciaPadre + distanciaGen > MAX_DISTANCE){
+                        cout << "Not added" << endl;
+                        return root;
+                        // si con el nodo nos pasamos del máximo, no lo insertamos y vamos a reintentar generar otra subcamara.
+                    }
+                    if (distanciaPadre + distanciaGen > maxDistancia){
+                        maxDistancia = distanciaPadre + distanciaGen;
+                        cout << maxDistancia << " DistP " << distanciaPadre << " DistG " << distanciaGen << " Potencial: " << distanciaGen * cantMineral << " PotencialP :"
+                        << root->getPotencial() <<  endl; 
+                    }
+                }
                 root->setLeft(AVL_insert(root, root->getLeft(), key));
-
-            else if (key > root->getPotencial())
+            } else if (key > root->getPotencial()) {
+                if (!root->getRight()){ // si no hay hijo derecho, estamos en el que será el nuevo padre.
+                    int distanciaPadre = root->getDistanciaTotal();
+                    if (distanciaPadre + distanciaGen > MAX_DISTANCE){
+                        cout << "Not added" << endl;
+                        return root;
+                        // si con el nodo nos pasamos del máximo, no lo insertamos y vamos a reintentar generar otra subcamara.
+                    }
+                    if (distanciaPadre + distanciaGen > maxDistancia){
+                        maxDistancia = distanciaPadre + distanciaGen;
+                        if (maxDistancia == 720) cout << "DistP " << distanciaPadre << " DistG " << distanciaGen << endl; 
+                    }
+                }
                 root->setRight(AVL_insert(root, root->getRight(), key));
-            else 
+            } else {
+                //cout << "Ya esta en el arbol: " << root->getPotencial() << endl;
                 return root;
-
+            }
         /*
             Step 1: Find the balance factor of parent\
         */
@@ -539,7 +565,7 @@ class Camara{
 };
 
 
-int main(){
+/*int main(){
     Camara *arbol = new Camara();
 
     //arbol->printTree();
@@ -590,6 +616,8 @@ int main(){
 
 
     SubCamara *nodo = arbol->searchI(10);
-    cout << nodo->getHeight() << " " << nodo->getPotencial()  << " " << nodo->getParent()->getPotencial() << endl;*/
+    cout << nodo->getHeight() << " " << nodo->getPotencial()  << " " << nodo->getParent()->getPotencial() << endl;
 
-}
+}*/
+
+#endif

@@ -1,3 +1,7 @@
+#ifndef SUBCAMARA
+
+#define SUBCAMARA 1
+
 using namespace std;
 
 class SubCamara{
@@ -62,8 +66,8 @@ class SubCamara{
         }
 
         int getDistanciaTotal(){
-            if (parent == nullptr){
-                return 0;
+            if (parent == nullptr){ // si es la raiz
+                return distancia;
             }
             return distancia + parent->getDistanciaTotal();
         }
@@ -96,3 +100,5 @@ class SubCamara{
             return parent;
         }
 };
+
+#endif

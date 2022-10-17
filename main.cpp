@@ -19,7 +19,12 @@ int main(){
     Puerta* puertaPtr = new Puerta();
     puertaPtr->printNetwork();
 
-    GameTimer timer(120.0f);
+    /*Topo * topo = new Topo(false, puertaPtr);
+    Personaje * personaje = topo;
+    if ((Topo * topo = dynamic_cast<Topo*>(personaje))){
+        cout << "hola" << endl;
+    }*/
+    /*GameTimer timer(120.0f);
     thread timerThread(&GameTimer::start, &timer); // inciamos el timer para el jugador azul
 
     cout << "Jugador Azul" << endl;
