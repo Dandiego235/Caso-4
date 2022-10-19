@@ -20,10 +20,11 @@ class Topo : public Personaje{
 
             puerta = pPuerta; // asignamos la puerta y la cámara
             camara = nullptr;
+            mineralAcumulado = 0;
         }
 
-        void play(){
-            while (true){
+        void play(thread *pThread, Estrategia *pEstrategia){
+            while (pThread->joinable()){
                 
                 cout << "El " << name << " está en la Puerta " << puerta->getId() << endl;
                 if (!puerta->getCamara()){

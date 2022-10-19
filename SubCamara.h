@@ -14,8 +14,9 @@ class SubCamara{
         int distanciaTotal;
         int potencial;
         int distancia;
-        int mineral;
-    
+        int mineralAzul;
+        int mineralRojo;
+
     public:
         SubCamara(SubCamara* par, int pDistancia, int pMineral){
             left = nullptr;
@@ -23,18 +24,19 @@ class SubCamara{
             height = 1;
             parent = par;
             distancia = pDistancia;
-            mineral = pMineral;
+            mineralAzul = pMineral;
+            mineralRojo = pMineral;
             potencial = pMineral * pDistancia;
             if (par){
                 distanciaTotal = par->getDistanciaTotal() + distancia;
             } else {
                 distanciaTotal = 0;
             }
-            
+            bool empty = false;
         }
 
         int getPotencial() {
-            return distancia * mineral;
+            return potencial;
         }
 
         void setPotencial(int pPotencial) {
@@ -49,12 +51,36 @@ class SubCamara{
             distancia = pDistancia;
         }
 
-        int getMineral(){
-            return mineral;
+        int getMineralAzul(){
+            return mineralAzul;
         }
 
-        void setMineral(int pMineral){
-            mineral = pMineral;
+        void setMineralAzul(int pMineral){
+            mineralAzul = pMineral;
+        }
+
+        void decMineralAzul(int number){
+            mineralAzul -= number;
+        }
+
+        bool isEmptyAzul(){
+            return !mineralAzul;
+        }
+
+        int getMineralRojo(){
+            return mineralRojo;
+        }
+
+        void setMineralRojo(int pMineral){
+            mineralRojo = pMineral;
+        }
+
+        void decMineralRojo(int number){
+            mineralRojo -= number;
+        }
+
+        bool isEmptyRojo(){
+            return !mineralRojo;
         }
 
         int getHeight(){

@@ -20,11 +20,11 @@ class Explorador : public Personaje{
 
             puerta = pPuerta; // asignamos la puerta y la cámara
             camara = nullptr;
+            mineralAcumulado = 0;
         }
 
-        void play(){
-            while (true){
-                
+        void play(thread pThread){
+            while (pThread->joinable()){
                 cout << "El " << name << " está en la Puerta " << puerta->getId() << endl;
                 if (!puerta->getCamara()){
                     int index = Random::rand_num(0,puerta->getQuantity());

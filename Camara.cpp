@@ -25,14 +25,14 @@ class Camara{
     public:
         Camara(){
             raiz = nullptr;
-            totalMineral = Random::rand_num(200, 600); // generamos un número máximo de minerales que puede haber en la 
+            totalMineral = Random::rand_num(200, 1000); // generamos un número máximo de minerales que puede haber en la 
             maxDistancia = 0;
             totalDistLeft = 0;
             totalDistRight = 0;
             mineralGenerado = 0;
             contador = 0;
 
-            cout << totalMineral << endl;            
+            //cout << totalMineral << endl;            
             cantMineral = 1;
             distanciaGen = 10;
             while (contador < MAX_CAMARAS && mineralGenerado < totalMineral && maxDistancia < MAX_DISTANCE){
@@ -46,7 +46,7 @@ class Camara{
                 // cout << contador << " Mineral: " << cantMineral << " Distancia: " << distanciaGen << endl;
             }
             printTree();
-            cout << contador << " Mineral generado: " << mineralGenerado << " Maxdistance: " << maxDistancia << endl;
+            //cout << contador << " Mineral generado: " << mineralGenerado << " Maxdistance: " << maxDistancia << endl;
         }
         /*
             Function to get the height of the tree
@@ -213,14 +213,14 @@ class Camara{
                 if (!root->getLeft()){ // si no hay hijo izquierdo, estamos en el que será el nuevo padre.
                     int distanciaPadre = root->getDistanciaTotal();
                     if (distanciaPadre + distanciaGen > MAX_DISTANCE){
-                        cout << "Not added" << endl;
+                        //cout << "Not added" << endl;
                         return root;
                         // si con el nodo nos pasamos del máximo, no lo insertamos y vamos a reintentar generar otra subcamara.
                     }
                     if (distanciaPadre + distanciaGen > maxDistancia){
                         maxDistancia = distanciaPadre + distanciaGen;
-                        cout << maxDistancia << " DistP " << distanciaPadre << " DistG " << distanciaGen << " Potencial: " << distanciaGen * cantMineral << " PotencialP :"
-                        << root->getPotencial() <<  endl; 
+                        //cout << maxDistancia << " DistP " << distanciaPadre << " DistG " << distanciaGen << " Potencial: " << distanciaGen * cantMineral << " PotencialP :"
+                        //<< root->getPotencial() <<  endl; 
                     }
                 }
                 root->setLeft(AVL_insert(root, root->getLeft(), key));
@@ -228,13 +228,13 @@ class Camara{
                 if (!root->getRight()){ // si no hay hijo derecho, estamos en el que será el nuevo padre.
                     int distanciaPadre = root->getDistanciaTotal();
                     if (distanciaPadre + distanciaGen > MAX_DISTANCE){
-                        cout << "Not added" << endl;
+                        //cout << "Not added" << endl;
                         return root;
                         // si con el nodo nos pasamos del máximo, no lo insertamos y vamos a reintentar generar otra subcamara.
                     }
                     if (distanciaPadre + distanciaGen > maxDistancia){
                         maxDistancia = distanciaPadre + distanciaGen;
-                        if (maxDistancia == 720) cout << "DistP " << distanciaPadre << " DistG " << distanciaGen << endl; 
+                        //if (maxDistancia == 720) cout << "DistP " << distanciaPadre << " DistG " << distanciaGen << endl; 
                     }
                 }
                 root->setRight(AVL_insert(root, root->getRight(), key));
@@ -404,17 +404,14 @@ class Camara{
                 */
                 delete(temp);
             } else if ((root->getLeft() == NULL) && (root->getRight() == NULL)){ // case with no children
-                cout << root->getParent()->getPotencial() << " " << root->getPotencial() << endl;
                 if (root->getParent()->getPotencial() < root->getPotencial()) { // si estamos borrando uno de la derecha
                     root->getParent()->setRight(NULL);
                 } else if (root->getParent()->getPotencial() > root->getPotencial()) { // si estamos borrando uno de la izquierda
                     root->getParent()->setLeft(NULL);
                 } else { //if (root->getParent()->getPotencial() == root->getPotencial()){
                     if (root->getParent()->getLeft() == root){
-                        cout << "Equals2" << endl;
                         root->getParent()->setLeft(NULL);
                     } else {
-                        cout << "Equals3" << endl;
                         root->getParent()->setRight(NULL);
                     }
                 }

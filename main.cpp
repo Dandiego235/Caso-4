@@ -6,6 +6,7 @@
 #include "Personajes/Topo.h"
 
 #include <iostream>
+#include <thread>
 
 using namespace std;
 
