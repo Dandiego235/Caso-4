@@ -6,8 +6,12 @@
 #include "Personajes/Topo.h"
 #include "Estrategias/Estrategia.h"
 #include "Estrategias/SpeedRun.h"
+//#include "Estrategias/Conservador.h"
+//#include "Estrategias/Deep.h"
+//#include "Estrategias/TryHard.h"
 #include <iostream>
 #include <thread>
+#include <unordered_map>
 
 using namespace std;
 
@@ -21,7 +25,7 @@ int main(){
     Puerta* puertaPtr = new Puerta();
     puertaPtr->printNetwork();
 
-    Personaje *personajePtr;
+    /*Personaje *personajePtr;
     personajePtr = new Explorador(false, puertaPtr);
 
     GameTimer timer(120.0f);
@@ -31,9 +35,9 @@ int main(){
     thread *mineroThread = new thread(&Personaje::play, personajePtr, &timerThread, strategy);
 
     timerThread.join();
-    mineroThread->join();
+    mineroThread->join();*/
 
-    /*GameTimer timer(120.0f);
+    GameTimer timer(120.0f);
     thread timerThread(&GameTimer::start, &timer); // inciamos el timer para el jugador azul
 
     cout << "Jugador Azul" << endl;
@@ -42,13 +46,29 @@ int main(){
 
     Personaje *personajePtr;
 
+    Personaje* personajesAzules[CANT_MINEROS];
+    unordered_map<char, Estrategia*> estrategias;
+
+    Estrategia *estrategiaPtr = new SpeedRun();
+    estrategias['1'] = estrategiaPtr;
+
+    /*estrategiaPtr = new Conservador();
+    estrategias['2'] = estrategiaPtr;
+
+    estrategiaPtr = new Deep();
+    estrategias['3'] = estrategiaPtr;
+
+    estrategiaPtr = new TryHard();
+    estrategias['4'] = estrategiaPtr;*/
+
     int minero = 0;
     char choice;
-    cout << "Ingrese el número para el tipo de minero que desea crear: \n 1. Explorador\n2. Carguero\n3. Topo\n" << endl;
-    streambuf* orig_buf = cout.rdbuf();
-    cout.rdbuf(NULL);
+    streambuf* orig_buf;
 
     while (minero < CANT_MINEROS){
+        cout << "Ingrese el número para el tipo de minero que desea crear: \n1. Explorador\n2. Carguero\n3. Topo\n" << endl;
+        orig_buf = cout.rdbuf();
+        cout.rdbuf(NULL);
         cin >> choice;
         switch(choice){
             case '1':
@@ -64,18 +84,41 @@ int main(){
                 cout << "ERROR: La opción ingresada no es válida" << endl;
                 continue;
         }
-        threadsAzules[minero++] = new thread(&Personaje::play, personajePtr);
+        cout.rdbuf(orig_buf);
+        cout << "Ingrese la estrategia para " << personajePtr->getName() << endl;
+        cout << "1. SpeedRun\n2. Deep\n3. Conservador\n4. TryHard" << endl;
+        orig_buf = cout.rdbuf();
+        cout.rdbuf(NULL);
+        cin >> choice;
+        switch(choice){
+            case '1':
+                estrategiaPtr = new SpeedRun();
+                break;
+            /*case '2':
+                personajePtr = new Carguero(false, puertaPtr);
+                break;
+            case '3':
+                personajePtr = new Topo(false, puertaPtr);
+                break;*/
+            default:
+                cout << "ERROR: La opción ingresada no es válida" << endl;
+                continue;
+        }
+        personajesAzules[minero] = personajePtr;
+        threadsAzules[minero++] = new thread(&Personaje::play, personajePtr, &timerThread, estrategiaPtr);
+        cout.rdbuf(orig_buf);
     }
 
     cout.rdbuf(orig_buf);
-    for(int index = 0; index < CANT_MINEROS; index++){
-        threadsAzules[index]->detach();
-    }
     timerThread.join();
+    int scoreAzul = 0;
+    for(int index = 0; index < CANT_MINEROS; index++){
+        threadsAzules[index]->join();
+        scoreAzul += personajesAzules[index]->getMineralAcumulado();
+    }
 
-    /*
-
-    Explorador *explorador = new Explorador(false, puertaPtr);
+    cout << "Los azules consiguieron " << scoreAzul << " minerales." << endl;
+    /*Explorador *explorador = new Explorador(false, puertaPtr);
 
     Explorador *explorador2 = new Explorador(true, puertaPtr);
 

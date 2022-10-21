@@ -71,8 +71,8 @@ class SpeedRun : public Estrategia{
 
                             if (pThread->joinable()){ // si todavía puede trabajar.
                                 minero->incMineralAcumulado(mineralRecogido); // incrementa la cantidad de mineral recogido.
+                                cout << "El " << minero->getName() << " devolvió " << mineralRecogido << endl;
                             }
-                            cout << "El " << minero->getName() << " devolvió " << mineralRecogido << endl;
                         }
                     }
                     
@@ -121,7 +121,7 @@ class SpeedRun : public Estrategia{
                         *index = *index - 1; // decrementamos index
                     } else {
                         //cout << "El " << minero->getName() << " terminó de recorrer las puertas y recogió " << minero->getMineralAcumulado() << " minerales." << endl;
-                        *index = minero->getPuerta()->getQuantity() - 1; // volvemos a empezar el recorrido para recoger lo que faltó.
+                        return; // paran de recorrer las puertas.
                     }      
                 }
             }
@@ -201,7 +201,7 @@ class SpeedRun : public Estrategia{
                             if (pThread->joinable()){
                                 minero->incMineralAcumulado(mineralRecogido);
                             }
-                            
+
                             cout << "El " << minero->getName() << " devolvió " << mineralRecogido << endl;
                         }
                     }
@@ -228,7 +228,7 @@ class SpeedRun : public Estrategia{
                         *index = *index - 1; // decrementamos index
                     } else {
                         //cout << "El " << minero->getName() << " terminó de recorrer las puertas y recogió " << minero->getMineralAcumulado() << " minerales." << endl;
-                        *index = minero->getPuerta()->getQuantity() - 1; // volvemos a empezar el recorrido para recoger lo que faltó.
+                        return; // paran de recorrer las puertas.
                     }      
                 }
             }

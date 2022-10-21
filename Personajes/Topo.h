@@ -23,8 +23,8 @@ class Topo : public Personaje{
             mineralAcumulado = 0;
         }
 
-        void play(thread *pThread, Estrategia *pEstrategia){
-            while (pThread->joinable()){
+        void play(thread *pThread, Estrategia *strategy){
+            /*while (pThread->joinable()){
                 
                 cout << "El " << name << " está en la Puerta " << puerta->getId() << endl;
                 if (!puerta->getCamara()){
@@ -42,7 +42,8 @@ class Topo : public Personaje{
                     //cout << index << " " << puerta->getId() << endl;
                 }
                 this_thread::sleep_for(seconds(1));
-            }
+            }*/
+            strategy->topo(pThread, this);
         }
 };
 

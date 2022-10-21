@@ -51,9 +51,9 @@ class Puerta {
         Puerta(){ // constructor para la primer puerta del 
             listaPuertas = new List<Puerta>();
             generarCamara(); // creamos la camara
-            quantity = Random::rand_num(2, 5);
+            quantity = Random::rand_num(2, 5); // el 5 es exclusivo
             id = contadorPuertas++;
-            if (totalPuertas < quantity){
+            if (totalPuertas < quantity){ // genera las puertas que faltan para llegar al total.
                 quantity = totalPuertas;
             }
             totalPuertas -= quantity;
