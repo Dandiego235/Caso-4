@@ -45,7 +45,7 @@ class Camara{
                 AVL_insert(nullptr, raiz, distanciaGen * cantMineral);
                 // cout << contador << " Mineral: " << cantMineral << " Distancia: " << distanciaGen << endl;
             }
-            printTree();
+            //printTree();
             //cout << contador << " Mineral generado: " << mineralGenerado << " Maxdistance: " << maxDistancia << endl;
         }
         /*

@@ -1,13 +1,11 @@
 #include "Estructuras/List.h"
-#include "Camara.cpp"
-#include "RandomGen.cpp"
-#include <iostream>
-
 #ifndef PUERTA
 
 #define PUERTA 1
 
-
+#include "Camara.cpp"
+#include "RandomGen.cpp"
+#include <iostream>
 
 using namespace std;
 
@@ -25,7 +23,7 @@ class Puerta {
 
         void generarCamara(){
             int random = Random::rand_num(0, 3);
-            if (random < 1){
+            if (random < 2){
                 camara = new Camara();
             } else {
                 camara = nullptr;
@@ -103,13 +101,15 @@ class Puerta {
             while (puertaPtr->getId()) { // mientras el id no sea igual a 0.
                 puertaPtr = puertaPtr->getListaPuertas()->find(0);
             }
+            string camaraStr = puertaPtr->getCamara() ? "c" : "";
+            cout << puertaPtr->getId() << camaraStr <<  " ( ";
 
             Node<Puerta>* printPtr = puertaPtr->getListaPuertas()->getFirst();
-            cout << puertaPtr->getId() << " ( ";
             Stack<Node<Puerta>> *printStack = new List<Node<Puerta>>();
             int printQuantity = 0;
             while (printQuantity < totalPuertas){
-                cout << printPtr->getData()->getId() << " ( ";
+                camaraStr = printPtr->getData()->getCamara() ? "c" : "";
+                cout << printPtr->getData()->getId() << camaraStr <<  " ( ";
                 printQuantity++;
                 if (printPtr->getData()->getListaPuertas()->findNode(1)){ // si el segundo elemento no es nullptr.
                     printStack->push(printPtr);

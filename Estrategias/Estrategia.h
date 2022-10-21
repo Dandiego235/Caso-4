@@ -2,12 +2,17 @@
 
 #define ESTRATEGIA 1
 
-#include "Personajes/Personaje.h"
+#include "../Personajes/Personaje.h"
+#include <thread>
+
+using namespace std;
+
+class Personaje;
 
 class Estrategia{
     public:
-        public virtual void play(thread *pThread, Personaje *personajePtr) = 0;
-        public virtual void topo(thread *pThread, Personaje *personajePtr) = 0;
+        virtual void play(thread *pThread, Personaje *personajePtr) = 0;
+        virtual void topo(thread *pThread, Personaje *personajePtr) = 0;
 };
 
 #endif

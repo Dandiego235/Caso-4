@@ -6,6 +6,7 @@
 #include <iostream>
 #include "../Puerta.cpp"
 #include "Personaje.h"
+#include "../Estrategias/Estrategia.h"
 
 using namespace std;
 
@@ -15,7 +16,7 @@ class Explorador : public Personaje{
             jugador = pJugador;
             string jugadorStr = (jugador) ? "Rojo" : "Azul";
             name = "Explorador " + jugadorStr;
-            speed = 20;
+            speed = 20.0f;
             capacity = 8;
 
             puerta = pPuerta; // asignamos la puerta y la cámara
@@ -23,8 +24,8 @@ class Explorador : public Personaje{
             mineralAcumulado = 0;
         }
 
-        void play(thread pThread){
-            while (pThread->joinable()){
+        void play(thread *pThread, Estrategia *strategy){
+            /*while (pThread->joinable()){
                 cout << "El " << name << " está en la Puerta " << puerta->getId() << endl;
                 if (!puerta->getCamara()){
                     int index = Random::rand_num(0,puerta->getQuantity());
@@ -41,7 +42,8 @@ class Explorador : public Personaje{
                     //cout << index << " " << puerta->getId() << endl;
                 }
                 this_thread::sleep_for(seconds(1));
-            }
+            }*/
+            strategy->play(pThread, this);
         }
 };
 

@@ -4,13 +4,14 @@
 #include "Personajes/Explorador.h"
 #include "Personajes/Carguero.h"
 #include "Personajes/Topo.h"
-
+#include "Estrategias/Estrategia.h"
+#include "Estrategias/SpeedRun.h"
 #include <iostream>
 #include <thread>
 
 using namespace std;
 
-#define CANT_PUERTAS 20
+#define CANT_PUERTAS 15
 
 #define CANT_MINEROS 3
 
@@ -20,11 +21,18 @@ int main(){
     Puerta* puertaPtr = new Puerta();
     puertaPtr->printNetwork();
 
-    /*Topo * topo = new Topo(false, puertaPtr);
-    Personaje * personaje = topo;
-    if ((Topo * topo = dynamic_cast<Topo*>(personaje))){
-        cout << "hola" << endl;
-    }*/
+    Personaje *personajePtr;
+    personajePtr = new Explorador(false, puertaPtr);
+
+    GameTimer timer(120.0f);
+    thread timerThread(&GameTimer::start, &timer); // inciamos el timer para el jugador azul
+
+    Estrategia *strategy = new SpeedRun();
+    thread *mineroThread = new thread(&Personaje::play, personajePtr, &timerThread, strategy);
+
+    timerThread.join();
+    mineroThread->join();
+
     /*GameTimer timer(120.0f);
     thread timerThread(&GameTimer::start, &timer); // inciamos el timer para el jugador azul
 

@@ -1,10 +1,13 @@
 #include "Node.h"
 #include "stack.h"
 #include "queue.h"
+#include <iostream>
 
 #ifndef LIST 
 
 #define LIST 1
+
+using namespace std;
 
 template <typename T> 
 class List : public Stack<T>, public Queue<T> {
@@ -160,7 +163,6 @@ class List : public Stack<T>, public Queue<T> {
             }
             return result;
         }
-
 };
 
 #endif

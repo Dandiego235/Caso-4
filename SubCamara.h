@@ -2,6 +2,8 @@
 
 #define SUBCAMARA 1
 
+#include <mutex>
+
 using namespace std;
 
 class SubCamara{
@@ -14,8 +16,10 @@ class SubCamara{
         int distanciaTotal;
         int potencial;
         int distancia;
+        int mineral; // cantidad de mineral al inicio de la generación de las cámaras.
         int mineralAzul;
         int mineralRojo;
+        mutex *mtx;
 
     public:
         SubCamara(SubCamara* par, int pDistancia, int pMineral){
@@ -24,6 +28,7 @@ class SubCamara{
             height = 1;
             parent = par;
             distancia = pDistancia;
+            mineral = pMineral;
             mineralAzul = pMineral;
             mineralRojo = pMineral;
             potencial = pMineral * pDistancia;
@@ -33,6 +38,7 @@ class SubCamara{
                 distanciaTotal = 0;
             }
             bool empty = false;
+            mtx = new mutex();
         }
 
         int getPotencial() {
@@ -51,16 +57,34 @@ class SubCamara{
             distancia = pDistancia;
         }
 
+        void setMineral(int pMineral){ // establecemos los dos contadores de mineral.
+            mineral = pMineral;
+            setMineralAzul(pMineral);
+            setMineralRojo(pMineral);
+        }
+
+        int getMineral(){
+            return mineral;
+        }
+
         int getMineralAzul(){
             return mineralAzul;
         }
 
         void setMineralAzul(int pMineral){
+            mtx->lock();
             mineralAzul = pMineral;
+            mtx->unlock();
         }
 
-        void decMineralAzul(int number){
+        int decMineralAzul(int number){
+            mtx->lock();
+            if (number > mineralAzul){
+                number = mineralAzul;
+            }
             mineralAzul -= number;
+            mtx->unlock();
+            return number;
         }
 
         bool isEmptyAzul(){
@@ -72,11 +96,19 @@ class SubCamara{
         }
 
         void setMineralRojo(int pMineral){
+            mtx->lock();
             mineralRojo = pMineral;
+            mtx->unlock();
         }
 
-        void decMineralRojo(int number){
+        int decMineralRojo(int number){
+            mtx->lock();
+            if (number > mineralRojo){
+                number = mineralRojo;
+            }
             mineralRojo -= number;
+            mtx->unlock();
+            return number;
         }
 
         bool isEmptyRojo(){

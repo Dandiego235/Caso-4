@@ -15,7 +15,7 @@ class Topo : public Personaje{
             jugador = pJugador;
             string jugadorStr = (jugador) ? "Rojo" : "Azul";
             name = "Topo " + jugadorStr;
-            speed = 7;
+            speed = 7.0f;
             capacity = 15;
 
             puerta = pPuerta; // asignamos la puerta y la cámara

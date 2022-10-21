@@ -15,7 +15,7 @@ class Carguero : public Personaje{
             jugador = pJugador;
             string jugadorStr = (jugador) ? "Rojo" : "Azul";
             name = "Carguero " + jugadorStr;
-            speed = 10;
+            speed = 10.0f;
             capacity = 40;
 
             puerta = pPuerta; // asignamos la puerta y la cámara

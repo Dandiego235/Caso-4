@@ -2,19 +2,22 @@
 
 #define PERSONAJE 1
 
-#include <thread>
-#include "../Estrategia.h"
 #include "../Puerta.cpp"
 #include "../Camara.cpp"
+#include "../Estrategias/Estrategia.h"
+#include <thread>
+
+class Estrategia;
 
 class Personaje{
     protected:
         string name;
-        int speed;
+        float speed;
         int capacity;
-        bool jugador;
+        bool jugador; // false para azul y true para rojo.
         Puerta *puerta;
         Camara *camara;
+        SubCamara *subcamara;
         SubCamara *raiz;
         SubCamara *subcamaraPtr;
         int mineralAcumulado;
@@ -22,7 +25,7 @@ class Personaje{
     public:
         virtual void play(thread *pThread, Estrategia *pEstrategia) = 0;
 
-        String getName(){
+        string getName(){
             return name;
         }
 
@@ -30,7 +33,7 @@ class Personaje{
             name = pName;
         }
 
-        void setPuerta(Puerta pPuerta){
+        void setPuerta(Puerta *pPuerta){
             puerta = pPuerta;
         }
 
@@ -38,11 +41,11 @@ class Personaje{
             return puerta;
         }
 
-        int getSpeed(){
+        float getSpeed(){
             return speed;
         }
 
-        void setSpeed(int pSpeed){
+        void setSpeed(float pSpeed){
             speed = pSpeed;
         }
 
@@ -78,6 +81,24 @@ class Personaje{
 
         void setSubCamara(SubCamara* pSubCamara){
             subcamara = pSubCamara;
+        }
+
+        // función que retorna la cantidad de mineral en una subcámara dependiendo del color del jugador
+        int readMineral(SubCamara *pSubCamara){
+            if (jugador){ // si es rojo.
+                return pSubCamara->getMineralRojo();
+            } else {
+                return pSubCamara->getMineralAzul();
+            }
+        }
+
+        // función que coge mineral de una subcámara dependiendo del color del jugador
+        int takeMineral(SubCamara *pSubCamara, int number){
+            if (jugador){ // si es rojo.
+                return pSubCamara->decMineralRojo(number);
+            } else {
+                return pSubCamara->decMineralAzul(number);
+            }
         }
 
         SubCamara* getRaiz(){

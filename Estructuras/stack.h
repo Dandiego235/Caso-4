@@ -10,7 +10,7 @@ class Stack {
         virtual void push(T* pValue) = 0;
         virtual T* pop() = 0;
         virtual bool isEmpty() = 0;
-        virtual T* getFirst() = 0;
+        virtual Node<T>* getFirst() = 0;
         virtual int getSize() = 0;
 };
 
