@@ -84,13 +84,14 @@ class SubCamara : public IData{
             mtx->unlock();
         }
 
-        int decMineralAzul(int number, int total, int capacity){
+        int decMineralAzul(int number, int totalRecogido, int capacity){
             mtx->lock();
             if (number > mineralAzul){
                 number = mineralAzul;
             }
-            if ((total + number) > capacity){
-                number = capacity - number;
+            if ((totalRecogido + number) > capacity){
+                // si intenta recoger mas de lo que puede, recoge solo lo que puede.
+                number = capacity - totalRecogido;
             }
             mineralAzul -= number;
             mtx->unlock();
@@ -111,13 +112,14 @@ class SubCamara : public IData{
             mtx->unlock();
         }
 
-        int decMineralRojo(int number, int total, int capacity){
+        int decMineralRojo(int number, int totalRecogido, int capacity){
             mtx->lock();
             if (number > mineralRojo){
                 number = mineralRojo;
             }
-            if ((total + number) > capacity){
-                number = capacity - number;
+            if ((totalRecogido + number) > capacity){
+                // si intenta recoger mas de lo que puede, recojo solo lo que se pueda.
+                number = capacity - totalRecogido;
             }
             mineralRojo -= number;
             mtx->unlock();
@@ -150,16 +152,26 @@ class SubCamara : public IData{
 
         SubCamara* getParent(){
             AVL_Node* parentNode = position->getParent();
-            SubCamara* parentSubCamara = dynamic_cast<SubCamara*>(parentNode->getData());
-            return parentSubCamara;
+            if (parentNode){
+                SubCamara* parentSubCamara = dynamic_cast<SubCamara*>(parentNode->getData());
+                return parentSubCamara;
+            }
+            // si no hay parent
+            return nullptr;
         }
         
         SubCamara* getLeft(){
-            return dynamic_cast<SubCamara*>(position->getLeft()->getData());
+            if(position->getLeft()){ // si hay un hijo izquierdo, retornamos el contenido del nodo como una subcamara
+                return dynamic_cast<SubCamara*>(position->getLeft()->getData());
+            }
+            return nullptr; // si no hay hijo izquierdo, retornamos nulo.
         }
 
         SubCamara* getRight(){
-            return dynamic_cast<SubCamara*>(position->getRight()->getData());
+            if(position->getRight()){ // si hay un hijo derecho, retornamos el contenido del nodo como una subcamara
+                return dynamic_cast<SubCamara*>(position->getRight()->getData());
+            }
+            return nullptr; // si no hay hijo derecho, retornamos nulo.
         }
 };
 

@@ -13,13 +13,9 @@
 // agarra todo excepto 1, para no matar esas cámaras.
 class Conservador : public Estrategia{
     private:
-        Stack<int>* stack; // pila para guardar los índices y recorrer las ultimas de primero.
-        int* index; // puntero que voy a usar para meter y extraer índices de la pila.
-        int nextDoor; // índice a la siguiente puerta donde voy a entrar.
-        unordered_set<int> camarasVisitadas; // almacenamos las puertas donde están las cámaras a donde entramos
-        int mineralRecogido; // se almacena todo el mineral recogido en una cámara completa
         bool change;
         int mineralAgarrado; //  aquí se almacena el mineral agarrado en una sola subcámara
+        
     public:
         void play(thread *pThread, Personaje *minero){
             stack = new List<int>();

@@ -4,7 +4,7 @@
 
 #include "../Puerta.cpp"
 #include "../Camara.cpp"
-#include "../Estrategias/Estrategia.h"
+//#include "../Estrategias/Estrategia.h"
 #include <thread>
 
 class Estrategia;
@@ -96,18 +96,18 @@ class Personaje{
         }
 
         // función que coge mineral de una subcámara dependiendo del color del jugador
-        int takeMineral(SubCamara *pSubCamara, int number, int total, int capacity){
+        int takeMineral(SubCamara *pSubCamara, int number, int totalRecogido, int capacity){
             if (jugador){ // si es rojo.
-                return pSubCamara->decMineralRojo(number, total, capacity);
+                return pSubCamara->decMineralRojo(number, totalRecogido, capacity);
             } else {
-                return pSubCamara->decMineralAzul(number, total, capacity);
+                return pSubCamara->decMineralAzul(number, totalRecogido, capacity);
             }
         }
 
         int leaveOne(SubCamara* pSubCamara, int pMineralRecogido){
             int mineralAgarrado;
             if (readMineral(pSubCamara) <= capacity){ // si la cantidad es menor o igual al capacity.
-                mineralAgarrado = takeMineral(pSubCamara, readMineral(pSubCamara)-1, mineralRecogido, capacity);
+                mineralAgarrado = takeMineral(pSubCamara, readMineral(pSubCamara)-1, pMineralRecogido, capacity);
                 // agarramos los suficientes para que quede en 1.
             } else {
                 mineralAgarrado = takeMineral(pSubCamara, capacity, pMineralRecogido, capacity);

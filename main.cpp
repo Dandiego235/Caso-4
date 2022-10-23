@@ -16,7 +16,9 @@ using namespace std;
 
 #define CANT_PUERTAS 15
 
-#define CANT_MINEROS 3
+#define CANT_MINEROS 1
+
+#define CANT_JUGADORES 1
 
 int Puerta::totalPuertas = CANT_PUERTAS;
 
@@ -78,14 +80,13 @@ int main(){
     estrategiaPtr = new TryHard();
     estrategias['4'] = estrategiaPtr;*/
 
-    for (int index = 0; index < 2; index++){
+    for (int index = 0; index < CANT_JUGADORES; index++){
         int minero = 0;
         char choice;
         streambuf* orig_buf;
         jugador = turnos[index] ? "Rojo" : "Azul";
         cout << "Jugador " << jugador << endl;
         gameTimers[index] = new GameTimer(120.0f);
-
         thread timerThread(&GameTimer::start, gameTimers[index]);
 
         while (minero < CANT_MINEROS){
