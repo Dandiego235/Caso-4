@@ -85,6 +85,9 @@ class Personaje{
 
         // función que retorna la cantidad de mineral en una subcámara dependiendo del color del jugador
         int readMineral(SubCamara *pSubCamara){
+            if (pSubCamara == nullptr){
+                return -1;
+            }
             if (jugador){ // si es rojo.
                 return pSubCamara->getMineralRojo();
             } else {
@@ -93,11 +96,11 @@ class Personaje{
         }
 
         // función que coge mineral de una subcámara dependiendo del color del jugador
-        int takeMineral(SubCamara *pSubCamara, int number){
+        int takeMineral(SubCamara *pSubCamara, int number, int total, int capacity){
             if (jugador){ // si es rojo.
-                return pSubCamara->decMineralRojo(number);
+                return pSubCamara->decMineralRojo(number, total, capacity);
             } else {
-                return pSubCamara->decMineralAzul(number);
+                return pSubCamara->decMineralAzul(number, total, capacity);
             }
         }
 

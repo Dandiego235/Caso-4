@@ -82,10 +82,13 @@ class SubCamara : public IData{
             mtx->unlock();
         }
 
-        int decMineralAzul(int number){
+        int decMineralAzul(int number, int total, int capacity){
             mtx->lock();
             if (number > mineralAzul){
                 number = mineralAzul;
+            }
+            if ((total + number) > capacity){
+                number = capacity - number;
             }
             mineralAzul -= number;
             mtx->unlock();
@@ -106,10 +109,13 @@ class SubCamara : public IData{
             mtx->unlock();
         }
 
-        int decMineralRojo(int number){
+        int decMineralRojo(int number, int total, int capacity){
             mtx->lock();
             if (number > mineralRojo){
                 number = mineralRojo;
+            }
+            if ((total + number) > capacity){
+                number = capacity - number;
             }
             mineralRojo -= number;
             mtx->unlock();

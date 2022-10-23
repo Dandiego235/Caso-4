@@ -6,8 +6,8 @@
 #include "Personajes/Topo.h"
 #include "Estrategias/Estrategia.h"
 #include "Estrategias/SpeedRun.h"
-//#include "Estrategias/Conservador.h"
-//#include "Estrategias/Deep.h"
+#include "Estrategias/Conservador.h"
+#include "Estrategias/Deep.h"
 //#include "Estrategias/TryHard.h"
 #include <iostream>
 #include <thread>
