@@ -24,6 +24,7 @@ class SpeedRun : public Estrategia{
         int nextDoor; // índice a la siguiente puerta donde voy a entrar.
         unordered_set<int> camarasVisitadas; // almacenamos las puertas donde están las cámaras a donde entramos
         int mineralRecogido;
+        bool change;
 
     public:
         void play(thread *pThread, Personaje *minero){
@@ -61,12 +62,12 @@ class SpeedRun : public Estrategia{
                             this_thread::sleep_for(chrono::duration<float>(left->getDistancia()/minero->getSpeed()));
                             // esperamos a que llegue a la subcamara.
 
-                            mineralRecogido = minero->takeMineral(left, minero->getCapacity());
+                            mineralRecogido = minero->takeMineral(left, minero->getCapacity(), 0, minero->getCapacity());
                             // recoge todo lo que puede cargar.
 
                             cout << "El " << minero->getName() << " recogió " << mineralRecogido << " de minerales" << endl;
 
-                            this_thread::sleep_for(duration<float>(left->getDistancia()/minero->getSpeed()));
+                            this_thread::sleep_for(chrono::duration<float>(left->getDistancia()/minero->getSpeed()));
                             // esperamos a que regrese.
 
                             if (pThread->joinable()){ // si todavía puede trabajar.
@@ -84,7 +85,7 @@ class SpeedRun : public Estrategia{
                             this_thread::sleep_for(duration<float>(right->getDistancia()/minero->getSpeed()));
                             // esperamos a que termine.
 
-                            mineralRecogido = minero->takeMineral(right, minero->getCapacity());
+                            mineralRecogido = minero->takeMineral(right, minero->getCapacity(), 0, minero->getCapacity());
                             // recoge todo lo que puede cargar
 
                             cout << "El " << minero->getName() << " recogió " << mineralRecogido << " de minerales" << endl;
@@ -132,6 +133,7 @@ class SpeedRun : public Estrategia{
             index = new int();
             *index = minero->getPuerta()->getQuantity() - 1; // metemos el índice de la última puerta de la puerta origen.
             stack->push(index);
+            change = false;
             
             while (pThread->joinable()){
                 cout << "El " << minero->getName() << " está en la Puerta " << minero->getPuerta()->getId() << endl;
@@ -158,13 +160,15 @@ class SpeedRun : public Estrategia{
                             this_thread::sleep_for(chrono::duration<float>(left->getDistancia()/minero->getSpeed()));
                             // esperamos a que llegue
 
-                            mineralRecogido = minero->takeMineral(left, minero->getCapacity());
+                            mineralRecogido = minero->takeMineral(left, minero->getCapacity(), 0, minero->getCapacity());
                             // el minero recoge todo lo que puede.
 
                             cout << "El " << minero->getName() << " recogió " << mineralRecogido << " de minerales" << endl;
 
-                            if (right->getDistancia() < left->getDistancia()){
-                                // si la distancia de la cámara hermana es menor, nos cambiamos de rama para durar menos.
+                            if (!change && mineralRecogido < minero->getCapacity()){
+                                minero->setSubCamara(right);
+                                mineralRecogido += minero->takeMineral(right, minero->getCapacity(), mineralRecogido, minero->getCapacity());
+                                change = true;
                                 this_thread::sleep_for(duration<float>(right->getDistancia()/minero->getSpeed()));
                             } else {
                                 this_thread::sleep_for(duration<float>(left->getDistancia()/minero->getSpeed()));
@@ -185,15 +189,16 @@ class SpeedRun : public Estrategia{
                             this_thread::sleep_for(duration<float>(right->getDistancia()/minero->getSpeed()));
                             // esperamos a que llegue
 
-                            mineralRecogido = minero->takeMineral(right, minero->getCapacity());
+                            mineralRecogido = minero->takeMineral(right, minero->getCapacity(), 0, minero->getCapacity());
                             // el topo recoge todo lo que puede.
 
                             cout << "El " << minero->getName() << " recogió " << mineralRecogido << " de minerales" << endl;
                             
-                            if (left->getDistancia() < right->getDistancia()){
-                                // si la distancia de la cámara hermana es menor, nos cambiamos de rama.
+                            if (!change && mineralRecogido < minero->getCapacity()){
+                                minero->setSubCamara(left);
+                                mineralRecogido += minero->takeMineral(left, minero->getCapacity(), mineralRecogido, minero->getCapacity());
+                                change = true;
                                 this_thread::sleep_for(duration<float>(left->getDistancia()/minero->getSpeed()));
-                                cout << "El " << minero->getName() << " se pasó de cámara." << endl;
                             } else {
                                 this_thread::sleep_for(duration<float>(right->getDistancia()/minero->getSpeed()));
                             }
@@ -211,7 +216,7 @@ class SpeedRun : public Estrategia{
                 }
                 // nos movemos hasta encontrar una cámara que tenga subárboles
                 nextDoor = *stack->getFirst()->getData();
-                
+                change = false;
                 // obtenemos un índice de 0 a la cantidad de puertas a las que lleva donde estamos.
                 minero->setPuerta(minero->getPuerta()->getListaPuertas()->find(nextDoor)); // entramos en la puerta
                 

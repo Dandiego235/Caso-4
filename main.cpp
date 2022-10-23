@@ -6,8 +6,8 @@
 #include "Personajes/Topo.h"
 #include "Estrategias/Estrategia.h"
 #include "Estrategias/SpeedRun.h"
-//#include "Estrategias/Conservador.h"
-//#include "Estrategias/Deep.h"
+#include "Estrategias/Conservador.h"
+#include "Estrategias/Deep.h"
 //#include "Estrategias/TryHard.h"
 #include <iostream>
 #include <thread>
@@ -94,10 +94,13 @@ int main(){
             case '1':
                 estrategiaPtr = new SpeedRun();
                 break;
-            /*case '2':
-                personajePtr = new Carguero(false, puertaPtr);
+            case '2':
+                estrategiaPtr = new Deep();
                 break;
             case '3':
+                estrategiaPtr = new Conservador();
+                break;
+            /*case '3':
                 personajePtr = new Topo(false, puertaPtr);
                 break;*/
             default:

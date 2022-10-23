@@ -4,6 +4,7 @@
 
 #include "Estrategia.h"
 
+// mayor cantidad en menor tiempo. Si no puede seguir bajando a tiempo, se sale de la cámara
 class TryHard : public Estrategia{
     public:
         void play (thread *pThread, Personaje *minero);
