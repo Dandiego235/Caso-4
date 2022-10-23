@@ -104,6 +104,18 @@ class Personaje{
             }
         }
 
+        int leaveOne(SubCamara* pSubCamara, int pMineralRecogido){
+            int mineralAgarrado;
+            if (readMineral(pSubCamara) <= capacity){ // si la cantidad es menor o igual al capacity.
+                mineralAgarrado = takeMineral(pSubCamara, readMineral(pSubCamara)-1, mineralRecogido, capacity);
+                // agarramos los suficientes para que quede en 1.
+            } else {
+                mineralAgarrado = takeMineral(pSubCamara, capacity, pMineralRecogido, capacity);
+                // agaramos todos los que se puede.
+            }
+            return mineralAgarrado;
+        }
+
         SubCamara* getRaiz(){
             return raiz;
         }

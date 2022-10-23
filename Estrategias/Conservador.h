@@ -71,11 +71,12 @@ class Conservador : public Estrategia{
                             continue;
                         } else {
                             // Si no, recoge todo lo que puede cargar.
-                            if (minero->readMineral(minero->getSubCamara()) < minero->getCapacity()){
+                            /*if (minero->readMineral(minero->getSubCamara()) < minero->getCapacity()){
                                 mineralAgarrado = minero->takeMineral(minero->getSubCamara(), minero->readMineral(minero->getSubCamara())-1, mineralRecogido, minero->getCapacity());
                             } else {
                                 mineralAgarrado = minero->takeMineral(minero->getSubCamara(), minero->getCapacity(), mineralRecogido, minero->getCapacity());
-                            }
+                            }*/
+                            mineralAgarrado = minero->leaveOne(minero->getSubCamara(), mineralRecogido);
                             mineralRecogido += mineralAgarrado;
                             cout << "El " << minero->getName() << " recogió " << mineralAgarrado << " de minerales" << endl;              
                         } // revisa si existe un nodo izquierdo
@@ -207,12 +208,14 @@ class Conservador : public Estrategia{
                             continue;
                         } else {
                             // Si no, recoge todo lo que puede cargar.
-                            if (minero->readMineral(minero->getSubCamara()) < minero->getCapacity()){
+                            /*if (minero->readMineral(minero->getSubCamara()) <= minero->getCapacity()){
                                 mineralAgarrado = minero->takeMineral(minero->getSubCamara(), minero->readMineral(minero->getSubCamara())-1, mineralRecogido, minero->getCapacity());
                             } else {
                                 mineralAgarrado = minero->takeMineral(minero->getSubCamara(), minero->getCapacity(), mineralRecogido, minero->getCapacity());
-                            }
+                            }*/
+                            mineralAgarrado = minero->leaveOne(minero->getSubCamara(), mineralRecogido);
                             mineralRecogido += mineralAgarrado;
+                            
                             cout << "El " << minero->getName() << " recogió " << mineralAgarrado << " de minerales" << endl;              
                         } // revisa si existe un nodo izquierdo
                         if (left){
@@ -232,11 +235,11 @@ class Conservador : public Estrategia{
                             }
                         } 
                         if (!newNodo){
-                            newNodo = minero->getSubCamara();
+                            newNodo = minero->getSubCamara(); // si no puede continuar por el derecho, se devuelve al padre.
                             minero->setSubCamara(newNodo->getParent());
                             
                         } else{
-                            minero->setSubCamara(newNodo);
+                            minero->setSubCamara(newNodo); // si existe, se mueve a la otra subcamara.
                         }
                         cout << "El " << minero->getName() << " está caminando " << newNodo->getDistancia() << endl;
                         this_thread::sleep_for(chrono::duration<float>(newNodo->getDistancia()/minero->getSpeed()));

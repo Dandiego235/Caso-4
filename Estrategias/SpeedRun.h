@@ -62,8 +62,8 @@ class SpeedRun : public Estrategia{
                             this_thread::sleep_for(chrono::duration<float>(left->getDistancia()/minero->getSpeed()));
                             // esperamos a que llegue a la subcamara.
 
-                            mineralRecogido = minero->takeMineral(left, minero->getCapacity(), 0, minero->getCapacity());
-                            // recoge todo lo que puede cargar.
+                            mineralRecogido = minero->leaveOne(left, 0);
+                            // recoge todo lo que puede cargar, pero deja 1 para no matar las camaras.
 
                             cout << "El " << minero->getName() << " recogió " << mineralRecogido << " de minerales" << endl;
 
@@ -85,8 +85,8 @@ class SpeedRun : public Estrategia{
                             this_thread::sleep_for(duration<float>(right->getDistancia()/minero->getSpeed()));
                             // esperamos a que termine.
 
-                            mineralRecogido = minero->takeMineral(right, minero->getCapacity(), 0, minero->getCapacity());
-                            // recoge todo lo que puede cargar
+                            mineralRecogido = minero->leaveOne(right, 0);
+                            // recoge todo lo que puede cargar, pero deja 1 para no matar las camaras.
 
                             cout << "El " << minero->getName() << " recogió " << mineralRecogido << " de minerales" << endl;
 
@@ -160,8 +160,8 @@ class SpeedRun : public Estrategia{
                             this_thread::sleep_for(chrono::duration<float>(left->getDistancia()/minero->getSpeed()));
                             // esperamos a que llegue
 
-                            mineralRecogido = minero->takeMineral(left, minero->getCapacity(), 0, minero->getCapacity());
-                            // el minero recoge todo lo que puede.
+                            mineralRecogido = minero->leaveOne(left, 0);
+                            // el topo recoge todo lo que puede, pero deja 1 para no matar las camaras.
 
                             cout << "El " << minero->getName() << " recogió " << mineralRecogido << " de minerales" << endl;
 
@@ -177,6 +177,11 @@ class SpeedRun : public Estrategia{
                             if (pThread->joinable()){
                                 minero->incMineralAcumulado(mineralRecogido); // si todavia podemos trabajar, incrementa el numero de mineral recogido.
                                 cout << "El " << minero->getName() << " devolvió " << mineralRecogido << endl;
+                                if (change){
+                                    continue;
+                                }
+                            } else {
+                                return;
                             }
                         }
                     }
