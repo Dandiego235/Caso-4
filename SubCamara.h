@@ -2,17 +2,15 @@
 
 #define SUBCAMARA 1
 
+#include "Estructuras/AVL_Node.h"
+#include "Estructuras/IData.h"
 #include <mutex>
+#include <string>
 
 using namespace std;
 
-class SubCamara{
+class SubCamara : public IData{
     private:
-        SubCamara *left;
-        SubCamara *right;
-        int height;
-        SubCamara *parent;
-
         int distanciaTotal;
         int potencial;
         int distancia;
@@ -20,25 +18,32 @@ class SubCamara{
         int mineralAzul;
         int mineralRojo;
         mutex *mtx;
+        AVL_Node *position; // puntero a la posición en el árbol de esta subcámara
 
     public:
-        SubCamara(SubCamara* par, int pDistancia, int pMineral){
-            left = nullptr;
-            right = nullptr;
-            height = 1;
-            parent = par;
+        SubCamara(int pDistancia, int pMineral){
             distancia = pDistancia;
             mineral = pMineral;
             mineralAzul = pMineral;
             mineralRojo = pMineral;
             potencial = pMineral * pDistancia;
-            if (par){
-                distanciaTotal = par->getDistanciaTotal() + distancia;
-            } else {
-                distanciaTotal = 0;
-            }
-            bool empty = false;
             mtx = new mutex();
+            position = nullptr;
+        }
+
+        int compareTo(IData *pData){
+            SubCamara* compare = dynamic_cast<SubCamara*>(pData); // convertimos el IData a SubCamara para poder compararlo
+            if (potencial == compare->getPotencial()){
+                return 0;
+            } else if (potencial > compare->getPotencial()){
+                return 1;
+            }
+            return -1;
+        }
+
+        string toString(){
+            string str = "Potencial: " + to_string(potencial) + " Distancia: " + to_string(distancia) + " Mineral: " + to_string(mineral) + " Distancia Total: " + to_string(getDistanciaTotal());
+            return str;
         }
 
         int getPotencial() {
@@ -115,48 +120,27 @@ class SubCamara{
             return !mineralRojo;
         }
 
-        int getHeight(){
-            return height;
-        }
-
-        void setHeight(int pHeight){
-            height = pHeight;
-        }
-
         int getDistanciaTotal(){
-            if (parent == nullptr){ // si es la raiz
+            if (position->getParent() == nullptr){ // si es la raiz
                 return distancia;
             }
-            return distancia + parent->getDistanciaTotal();
+            SubCamara* subCamaraParent = dynamic_cast<SubCamara*>(position->getParent()->getData()); // obtenemos la subcamara padre de esta.
+            return distancia + subCamaraParent->getDistanciaTotal();
         }
 
         void setDistanciaTotal(int pDistanciaTotal){
             distanciaTotal = pDistanciaTotal;
         }
 
-        void setRight(SubCamara *pNode){
-            right = pNode;
+        void setPosition(AVL_Node *pPosition){
+            position = pPosition;
         }
 
-        SubCamara* getRight(){
-            return right;
+        AVL_Node* getPosition(){
+            return position;
         }
 
-        void setLeft(SubCamara *pNode){
-            left = pNode;
-        }
-
-        SubCamara* getLeft(){
-            return left;
-        }
-
-        void setParent(SubCamara *pNode){
-            parent = pNode;
-        }
-
-        SubCamara* getParent(){
-            return parent;
-        }
+        
 };
 
 #endif
