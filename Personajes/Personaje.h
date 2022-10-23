@@ -71,7 +71,7 @@ class Personaje{
 
         void setCamara(Camara* pCamara){
             camara = pCamara;
-            setRaiz(camara->getRaiz());
+            setRaiz(dynamic_cast<SubCamara*>(camara->getRaiz()->getData()));
             setSubCamara(raiz);
         }
 

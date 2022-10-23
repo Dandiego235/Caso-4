@@ -19,6 +19,7 @@ class SubCamara : public IData{
         int mineralRojo;
         mutex *mtx;
         AVL_Node *position; // puntero a la posición en el árbol de esta subcámara
+        SubCamara* parent;
 
     public:
         SubCamara(int pDistancia, int pMineral){
@@ -29,6 +30,7 @@ class SubCamara : public IData{
             potencial = pMineral * pDistancia;
             mtx = new mutex();
             position = nullptr;
+            parent = nullptr;
         }
 
         int compareTo(IData *pData){
@@ -146,7 +148,19 @@ class SubCamara : public IData{
             return position;
         }
 
+        SubCamara* getParent(){
+            AVL_Node* parentNode = position->getParent();
+            SubCamara* parentSubCamara = dynamic_cast<SubCamara*>(parentNode->getData());
+            return parentSubCamara;
+        }
         
+        SubCamara* getLeft(){
+            return dynamic_cast<SubCamara*>(position->getLeft()->getData());
+        }
+
+        SubCamara* getRight(){
+            return dynamic_cast<SubCamara*>(position->getRight()->getData());
+        }
 };
 
 #endif

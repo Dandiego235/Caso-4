@@ -117,12 +117,12 @@ int main(){
                 case '1':
                     estrategiaPtr = new SpeedRun();
                     break;
-                /*case '2':
-                    personajePtr = new Carguero(false, puertaPtr);
+                case '2':
+                    estrategiaPtr = new Deep();
                     break;
                 case '3':
-                    personajePtr = new Topo(false, puertaPtr);
-                    break;*/
+                    estrategiaPtr = new Conservador();
+                    break;
                 default:
                     cout << "ERROR: La opción ingresada no es válida" << endl;
                     continue;
