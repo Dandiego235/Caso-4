@@ -36,7 +36,7 @@ class Conservador : public Estrategia{
 
                     cout << "El " << minero->getName() << " entró en la cámara de la puerta " << minero->getPuerta()->getId() << endl;
 
-                    while (true){
+                    while (pThread->joinable()){
                         SubCamara* left = minero->getSubCamara()->getLeft();
                         SubCamara* right = minero->getSubCamara()->getRight();
                         SubCamara * newNodo; // se almacena la subcámara donde se va a ir
@@ -44,6 +44,7 @@ class Conservador : public Estrategia{
                             if (pThread->joinable()){ // revisa si todavía puede trabajar.
                                 minero->incMineralAcumulado(mineralRecogido); // incrementa la cantidad de mineral recogido.
                                 cout << "El " << minero->getName() << " devolvió " << mineralRecogido << endl;
+                                mineralRecogido = 0;
                             } else {
                                 return;
                             }
@@ -62,8 +63,26 @@ class Conservador : public Estrategia{
                         
                         // Si la capacidad del minero ya se llenó o si el minero ya recogió los dos subárboles de la subcámara, se devuelve al nodo padre
                         if (mineralRecogido >= minero->getCapacity() || (minero->readMineral(left) == 1 && minero->readMineral(right) == 1)){ // si el mineral recogido sobrepasa la capacidad, lo iguala a la capacidad
-                            this_thread::sleep_for(chrono::duration<float>(minero->getSubCamara()->getDistancia()/minero->getSpeed()));
-                            minero->setSubCamara(minero->getSubCamara()->getParent());
+                            if (minero->readMineral(left) == 1 && minero->readMineral(right) == 1){
+                                mineralAgarrado = minero->leaveOne(minero->getSubCamara(), mineralRecogido);
+                                mineralRecogido += mineralAgarrado;
+                                cout << "El " << minero->getName() << " recogió " << mineralAgarrado << " de minerales" << endl;              
+                            }
+                            if ((minero->getSubCamara()->getParent() != nullptr)){
+                                cout << "El " << minero->getName() << " está devolviéndose " << minero->getSubCamara()->getDistancia() << endl;
+                                this_thread::sleep_for(chrono::duration<float>(minero->getSubCamara()->getDistancia()/minero->getSpeed()));
+                                minero->setSubCamara(minero->getSubCamara()->getParent());
+                            } else if(minero->readMineral(left) != 1) {
+                                cout << "El " << minero->getName() << " está caminando " << left->getDistancia() << endl;
+                                this_thread::sleep_for(chrono::duration<float>(left->getDistancia()/minero->getSpeed()));
+                                minero->setSubCamara(left);
+                            } else if(minero->readMineral(right) != 1) {
+                                cout << "El " << minero->getName() << " está caminando " << right->getDistancia() << endl;
+                                this_thread::sleep_for(chrono::duration<float>(right->getDistancia()/minero->getSpeed()));
+                                minero->setSubCamara(right);
+                            } else{
+                                break;
+                            }
                             continue;
                         } else {
                             // Si no, recoge todo lo que puede cargar.
