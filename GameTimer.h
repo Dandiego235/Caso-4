@@ -26,7 +26,7 @@ class GameTimer{
             startTime = system_clock::now(); // obtenemos la hora actual.
             while(deltaTime.count() < endTime){
                 tick();
-                if (round(endTime - deltaTime.count()) <= 10){
+                if (round(endTime - deltaTime.count()) <= 10 && round(endTime - deltaTime.count()) >= 0){
                     cout << round(endTime - deltaTime.count()) << endl;
                 }
                 this_thread::sleep_for(seconds(1));

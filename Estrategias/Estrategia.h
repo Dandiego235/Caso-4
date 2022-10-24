@@ -19,8 +19,8 @@ class Estrategia{
         int mineralRecogido;
 
     public:
-        virtual void play(thread *pThread, Personaje *personajePtr) = 0;
-        virtual void topo(thread *pThread, Personaje *personajePtr) = 0;
+        virtual void play(thread *pThread, Personaje *personajePtr) = 0; // función para explorador y carguero
+        virtual void topo(thread *pThread, Personaje *personajePtr) = 0; // función para comportamiento exclusivo del topo.
 
         void moveNextDoor(Personaje *minero){
             // nos movemos hasta encontrar una cámara que tenga subárboles
@@ -38,12 +38,8 @@ class Estrategia{
                 stack->pop();
 
                 index = stack->getFirst()->getData(); // entonces popeamos para devolvernos a la puerta anterior.
-                //if (*index){ // revisamos si el indice no es nulo
                 *index = *index - 1; // decrementamos index
-                //} else {
-                    //cout << "El " << minero->getName() << " terminó de recorrer las puertas y recogió " << minero->getMineralAcumulado() << " minerales." << endl;
-               //     return; // paran de recorrer las puertas.
-                //}      
+                // si este queda en -1, ya recorrimos todas las puertas. 
             }
         }
 };

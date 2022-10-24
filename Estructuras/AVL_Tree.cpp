@@ -11,14 +11,12 @@ using namespace std;
 class AVL_Tree{
     private:
         AVL_Node* raiz;
-        AVL_Node* searchPointer;
-        int size;
+        AVL_Node* searchPointer; // puntero para buscar nodos
 
     public:
         AVL_Tree(){
             raiz = nullptr;
             searchPointer = nullptr;
-            size = 0;
         }
 
         AVL_Node* getRaiz(){
@@ -41,7 +39,6 @@ class AVL_Tree{
 
         AVL_Node* newAVL_Node(AVL_Node* par, IData* data){
             AVL_Node* node = new AVL_Node(par, data);
-            size++;
             if (!raiz){
                 raiz = node;
             }
@@ -49,20 +46,19 @@ class AVL_Tree{
             return(node);
         }
 
-        int getSize(){
-            return size;
-        }
 
         /*
             Function to update the heights
         */
         void update_height(AVL_Node* root){
             if (root != NULL) {
-                int val = 1;
+                int val = 1; // la altura de cada nodo no nulo es al menos 1.
                 if (root->getLeft() != NULL)
                     val = root->getLeft()->getHeight() + 1;
+                    // si tiene hijo izquierdo, obtenemos la altura izquierda.
                 if (root->getRight() != NULL)
                     val = max(val, root->getRight()->getHeight() + 1);
+                    // si tiene un hijo derecho, obtenemos la altura máxima de todo el árbol
                 root->setHeight(val);
             }
         }
@@ -100,10 +96,12 @@ class AVL_Tree{
             node->setParent(leftChild);
 
             if (leftChild->getParent() != NULL && node->getData()->compareTo(leftChild->getParent()->getData()) == -1) {
+                // si el padre no es nulo y el nodo rotado era el hijo izquierdo, debemos reenlazar el padre con el nodo que sube.
                 leftChild->getParent()->setLeft(leftChild);
             }
             else{
                 if (leftChild->getParent() != NULL)
+                    // si el padre no es nulo y el nodo rotado era el hijo derecho, debemos reenlazar el padre con el nodo que sube.
                     leftChild->getParent()->setRight(leftChild);
                 else {
                     raiz = leftChild;
@@ -113,7 +111,7 @@ class AVL_Tree{
             node = leftChild;
 
         /*
-            Update the heights
+            Update the heights of subtrees
         */    
             update_height(node->getLeft());
             update_height(node->getRight());
@@ -190,6 +188,7 @@ class AVL_Tree{
             if (N == NULL)
                 return 0;
             return height(N->getLeft()) - height(N->getRight());
+            // en este árbol, el balance se obtiene mediante la resta de la altura del subárbol izquierdo menos el derecho.
         }
 
 
@@ -197,6 +196,8 @@ class AVL_Tree{
             Function to construct a tree.
         */
         AVL_Node* AVL_insert(IData *pData){
+            // esta función solo recibe el IData. Se usa para iniciar la función recursiva más fácilmente.
+            // searchpointer va a apuntar al nodo insertado o a nulo si no se agrega.
             searchPointer = nullptr; // ponemos a searchPointer a apuntar para indicar cuando no se agrega un nodo.
             AVL_insert(NULL, raiz, pData);
             return searchPointer; // retornamos el nodo insertado.
@@ -207,15 +208,15 @@ class AVL_Tree{
             Perform the normal BST insertion
         */
             if (root == NULL)
-                return(newAVL_Node(par, pData));
+                return(newAVL_Node(par, pData)); // si no existe, lo creamos.
 
             if (pData->compareTo(root->getData()) == -1){ // si el data es menor que el valor del nodo.
-                root->setLeft(AVL_insert(root, root->getLeft(), pData));
+                root->setLeft(AVL_insert(root, root->getLeft(), pData)); // nos movemos a la izquierda.
 
             } else if (pData->compareTo(root->getData()) == 1) { // si el data es mayor que el valor del nodo.
-                root->setRight(AVL_insert(root, root->getRight(), pData));
+                root->setRight(AVL_insert(root, root->getRight(), pData)); // nos movemos a la derecha.
             } else { 
-                return root;
+                return root; // si es igual, solo retronamos el mismo nodo.
             }
 
         /*
@@ -228,6 +229,7 @@ class AVL_Tree{
         /*
             1. Left Left Case
         */
+       // el nodo que se retorna en las rotaciones es el que subió.
             if (balance > 1 && pData->compareTo(root->getLeft()->getData()) == -1)
                 return rightRotate(root);
 
@@ -264,33 +266,9 @@ class AVL_Tree{
             return root;
         }
 
-        /*
-            AVL Tree Traversal 
-        
-        void PREORDER(AVL_Node *root){
-            cout << "Node: " << root->key << ", Parent Node: ";
-
-            if (root->getParent() != NULL)
-                cout << root->getParent()->key << endl;
-            else
-                cout << "NULL" << endl;
-            /* 
-                Recur to the left subtree
-            
-            if (root->getLeft() != NULL) {
-                PREORDER(root->getLeft());
-            }
-
-            /*
-                Recur to the right subtree
-            
-            if (root->getRight() != NULL) {
-                PREORDER(root->getRight());
-            }
-        }*/
 
         /*
-            Function to find the AVL_Node with minimum key value
+            Function to find the AVL_Node with minimum key value. Used to find the immediate succesor.
         */
         AVL_Node * minValueAVL_Node(AVL_Node* node){
             AVL_Node* current = node;
@@ -303,8 +281,10 @@ class AVL_Tree{
         }
 
         AVL_Node* AVL_delete(IData *pData){
+            // función auxiliar par borrar un nodo fácilmente.
             return AVL_delete(raiz, pData);
         }
+
         /*
             Function to delete an AVL_Node with the given key from the subtree 
         */
@@ -389,7 +369,7 @@ class AVL_Tree{
                 } else if (root->getParent()->getData()->compareTo(root->getData()) == 1) { // si estamos borrando uno de la izquierda
                     root->getParent()->setLeft(NULL);
 
-                } else { //if (root->getParent()->getData() == root->getData()){
+                } else { // caso de -> if (root->getParent()->getData() == root->getData()){
                     if (root->getParent()->getLeft() == root){
                         root->getParent()->setLeft(NULL);
                     } else {
@@ -468,7 +448,7 @@ class AVL_Tree{
         return root;
         }
 
-        // Print the tree
+        // Print the tree: función auxiliar para imprimir el árbol
         void printTree(){
             printTree(raiz, "", true);
         }
@@ -489,6 +469,7 @@ class AVL_Tree{
             }
         }
 
+        // función para encontrar un nodo.
         AVL_Node* search(IData *pData){
             AVL_Node* nodePtr = raiz;
             searchPointer = raiz;

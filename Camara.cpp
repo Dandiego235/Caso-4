@@ -15,13 +15,13 @@ using namespace std;
 
 class Camara{
     private:
-        AVL_Tree* arbol;
-        int totalMineral;
-        int maxDistancia;
-        int distanciaGen;
-        int cantMineral;
-        int mineralGenerado;
-        int contador;
+        AVL_Tree* arbol; // arbol de subcámaras.
+        int totalMineral; // total de mineral para todo el tunel
+        int maxDistancia; // distancia máxima de un subárbol del tunel
+        int distanciaGen; // distancia generada con cada subcámara
+        int cantMineral; // cantidad de mineral generada para cada subcámara
+        int mineralGenerado; // cantidad de mineral generado hasta el momento
+        int contador; // contador para la cantidad de subcámaras generadas.
     public:
         Camara(){
             arbol = new AVL_Tree();
@@ -30,8 +30,7 @@ class Camara{
             maxDistancia = 0;
             mineralGenerado = 0;
             contador = 0;
-
-            //cout << totalMineral << endl;            
+    
             cantMineral = 1;
             distanciaGen = 10;
             while (contador < MAX_CAMARAS && mineralGenerado < totalMineral && maxDistancia < MAX_DISTANCE){
@@ -50,7 +49,7 @@ class Camara{
 
                 subcamara->setPosition(newNode); // le asignamos su posición en el arbol.
                 int distanciaTotal = subcamara->getDistanciaTotal();
-                if (distanciaTotal > MAX_DISTANCE){ // si nos pasamos de los 720 metros, borramos el nodo.
+                if (distanciaTotal > MAX_DISTANCE){ // si nos pasamos de los 720 metros, borramos el nodo y volvemos a intentarlo
                     arbol->AVL_delete(subcamara);
                     newNode = nullptr;
                     delete(subcamara);
@@ -61,10 +60,7 @@ class Camara{
                 mineralGenerado += cantMineral;
                 maxDistancia = (distanciaTotal > maxDistancia) ? distanciaTotal : maxDistancia;
                 contador++;
-                cout << contador << " Mineral: " << cantMineral << " Distancia: " << distanciaGen << endl;
             }
-            //arbol->printTree();
-            cout << contador << " Mineral generado: " << mineralGenerado << " Maxdistance: " << maxDistancia << endl;
         }
 
         
@@ -77,61 +73,5 @@ class Camara{
         }
 
 };
-
-
-/*int main(){
-    Camara *camara = new Camara();
-
-    camara->getArbol()->printTree();
-
-
-   //Constructing tree 
-
-    SubCamara* root = arbol->AVL_insert(40);
-    arbol->AVL_insert(20);
-    arbol->printTree();
-    arbol->AVL_insert(10);
-    arbol->printTree();
-    arbol->AVL_insert(30);
-    arbol->printTree();
-    arbol->AVL_insert(25);
-    arbol->printTree();
-    arbol->AVL_insert(60);
-    arbol->printTree();
-    arbol->AVL_insert(45);
-    arbol->printTree();
-    arbol->AVL_insert(42);
-    arbol->printTree();
-    arbol->AVL_insert(52);
-    arbol->printTree();
-    arbol->AVL_insert(50);
-    arbol->printTree();
-    arbol->AVL_insert(55);
-    arbol->printTree();
-    arbol->AVL_insert(75);
-    arbol->printTree();
-    arbol->AVL_insert(70);
-    arbol->printTree();
-    arbol->AVL_insert(80);
-    arbol->printTree();
-    arbol->AVL_insert(85);
-
-    arbol->printTree();
-    cout << "Preorder traversal of the above AVL tree is:\n"<<endl;
-    arbol->PREORDER(arbol->getRaiz());
-
-
-    //Insert the node 7
-
-    root = arbol->AVL_delete(45);
-    cout << "Preorder traversal of the above AVL tree after deletion of 25 is:\n"<<endl;
-    arbol->PREORDER(arbol->getRaiz());
-    arbol->printTree();
-
-
-    SubCamara *nodo = arbol->searchI(10);
-    cout << nodo->getHeight() << " " << nodo->getPotencial()  << " " << nodo->getParent()->getPotencial() << endl;
-    
-}*/
 
 #endif

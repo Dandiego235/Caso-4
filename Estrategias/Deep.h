@@ -12,7 +12,7 @@
 
 using namespace std;
 
-// va hasta el final de la cámara
+// va hasta el final de la cámara, a la subcámara más profunda y luego pasa a otra cámara distinta.
 class Deep : public Estrategia{
     private:
         bool change;
@@ -44,19 +44,24 @@ class Deep : public Estrategia{
                         SubCamara* left = minero->getSubCamara()->getLeft();
                         SubCamara* right = minero->getSubCamara()->getRight();
 
-                        if (left && !right){ // si existe un hijo en una dirección, pero en la otra no, se va por la dirección en la que sí existe
+                        if (left && !right){
+                            // si existe un hijo en una dirección, pero en la otra no, se va por la dirección en la que sí existe
                             cout << "El " << minero->getName() << " está caminando " << left->getDistancia() << endl;
                             this_thread::sleep_for(chrono::duration<float>(left->getDistancia()/minero->getSpeed()));
                             minero->setSubCamara(left);
+
                         } else if(!left && right){
                             cout << "El " << minero->getName() << " está caminando " << right->getDistancia() << endl;
                             this_thread::sleep_for(chrono::duration<float>(right->getDistancia()/minero->getSpeed()));
                             minero->setSubCamara(right);
-                        } else if(right && left){ // si existen ambas direcciones, busca para ver cuál tiene mayor distancia y se va a esa, porque es más profunda
+
+                        } else if(right && left){
+                            // si existen ambas direcciones, busca para ver cuál tiene mayor distancia y se va a esa, porque es más profunda
                             if (left->getDistancia() >= right->getDistancia()){ 
                                 cout << "El " << minero->getName() << " está caminando " << left->getDistancia() << endl;
                                 this_thread::sleep_for(chrono::duration<float>(left->getDistancia()/minero->getSpeed()));
                                 minero->setSubCamara(left);
+
                             } else{ 
                                 cout << "El " << minero->getName() << " está caminando " << right->getDistancia() << endl;
                                 this_thread::sleep_for(chrono::duration<float>(right->getDistancia()/minero->getSpeed()));
@@ -69,18 +74,13 @@ class Deep : public Estrategia{
                                     cout << "El " << minero->getName() << " se sofocó" << endl;
                                     return;
                                 }
-                                /*if (mineralRecogido > minero->getCapacity()){ // si el mineral recogido sobrepasa la capacidad, lo iguala a la capacidad
-                                    mineralRecogido = minero->getCapacity();
-                                } else {*/
-                                    // Si no, recoge todo lo que puede cargar.
-                                    
+
+                                // recoge todo lo que puede cargar.
                                 mineralAgarrado = minero->takeMineral(minero->getSubCamara(), minero->getCapacity(), mineralRecogido, minero->getCapacity());
                                 mineralRecogido += mineralAgarrado;
-                                if (mineralRecogido > minero->getCapacity()){
-                                    cout << "Mayor" << endl;
-                                }
+
                                 cout << "El " << minero->getName() << " recogió " << mineralAgarrado << " de minerales" << endl;
-                                //}
+
                                 // espera el tiempo que dura en recorrer la distancia para llegar al padre.
                                 this_thread::sleep_for(chrono::duration<float>(minero->getSubCamara()->getDistancia()/minero->getSpeed()));
                                 minero->setSubCamara(minero->getSubCamara()->getParent());          
@@ -128,49 +128,52 @@ class Deep : public Estrategia{
                         SubCamara* left = minero->getSubCamara()->getLeft();
                         SubCamara* right = minero->getSubCamara()->getRight();
 
-                        if (left && !right){ // si existe un hijo en una dirección, pero en la otra no, se va por la dirección en la que sí existe
+                        if (left && !right){
+                        // si existe un hijo en una dirección, pero en la otra no, se va por la dirección en la que sí existe
                             cout << "El " << minero->getName() << " está caminando " << left->getDistancia() << endl;
                             this_thread::sleep_for(chrono::duration<float>(left->getDistancia()/minero->getSpeed()));
                             minero->setSubCamara(left);
+
                         } else if(!left && right){
                             cout << "El " << minero->getName() << " está caminando " << right->getDistancia() << endl;
                             this_thread::sleep_for(chrono::duration<float>(right->getDistancia()/minero->getSpeed()));
                             minero->setSubCamara(right);
-                        } else if(right && left){ // si existen ambas direcciones, busca para ver cuál tiene mayor distancia y se va a esa, porque es más profunda
+
+                        } else if(right && left){
+                            // si existen ambas direcciones, busca para ver cuál tiene mayor distancia y se va a esa, porque es más profunda
                             if (left->getDistancia() >= right->getDistancia()){ 
                                 cout << "El " << minero->getName() << " está caminando " << left->getDistancia() << endl;
                                 this_thread::sleep_for(chrono::duration<float>(left->getDistancia()/minero->getSpeed()));
                                 minero->setSubCamara(left);
+
                             } else{ 
                                 cout << "El " << minero->getName() << " está caminando " << right->getDistancia() << endl;
                                 this_thread::sleep_for(chrono::duration<float>(right->getDistancia()/minero->getSpeed()));
                                 minero->setSubCamara(right);
+
                             }
                         } else { // Si la cámara no tiene hijos, ya llegó a la subcámara más profunda del árbol
                             while (minero->getSubCamara()->getParent() != nullptr){ // mientras no haya salido de la cámara
                                 if (minero->readMineral(minero->getSubCamara()->getParent()) == 0){
-                                    // si el nodo padre tiene 0 minerales, se muere el minero
+                                    // si el nodo padre tiene 0 minerales, se muere el topo
                                     cout << "El " << minero->getName() << " se sofocó" << endl;
                                     return;
                                 }
-                                /*if (mineralRecogido > minero->getCapacity()){ // si el mineral recogido sobrepasa la capacidad, lo iguala a la capacidad
-                                    mineralRecogido = minero->getCapacity();
-                                } else {*/
-                                    // Si no, recoge todo lo que puede cargar.
                                     
                                 mineralAgarrado = minero->takeMineral(minero->getSubCamara(), minero->getCapacity(), mineralRecogido, minero->getCapacity());
                                 mineralRecogido += mineralAgarrado;
-                                if (mineralRecogido > minero->getCapacity()){
-                                    cout << "Mayor" << endl;
-                                }
+
                                 cout << "El " << minero->getName() << " recogió " << mineralAgarrado << " de minerales" << endl;
-                                
+
                                 if (!change){
                                     if(minero->getSubCamara()->getParent()->getRight() == minero->getSubCamara()){
-                                        if (minero->getSubCamara()->getParent()->getLeft() != nullptr){
+                                        // si estamos en el hijo derecho de la camara
+                                        if (minero->getSubCamara()->getParent()->getLeft()){
+                                            // si tiene hijo izquierdo
                                             if (minero->getSubCamara()->getParent()->getLeft()->getDistancia() < minero->getSubCamara()->getDistancia()){
+                                                // si la distancia del izquierdo es menor, se pasa
                                                 minero->setSubCamara(minero->getSubCamara()->getParent()->getLeft());
-                                            }
+                                            } 
                                         } else {
                                             minero->setSubCamara(minero->getSubCamara()->getParent());
                                         }

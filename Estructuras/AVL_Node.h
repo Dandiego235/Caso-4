@@ -19,7 +19,7 @@ class AVL_Node{
             data = pData;
             left = nullptr;
             right = nullptr;
-            height = 1;
+            height = 1; // la altura del árbol. Es 1 cuando es solo 1 nodo.
             parent = par;
         }
 

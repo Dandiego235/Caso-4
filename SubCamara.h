@@ -11,7 +11,6 @@ using namespace std;
 
 class SubCamara : public IData{
     private:
-        int distanciaTotal;
         int potencial;
         int distancia;
         int mineral; // cantidad de mineral al inicio de la generación de las cámaras.
@@ -33,7 +32,7 @@ class SubCamara : public IData{
             parent = nullptr;
         }
 
-        int compareTo(IData *pData){
+        int compareTo(IData *pData){ // función para comparar dos cámaras. Se va a basar en su potencial de minado.
             SubCamara* compare = dynamic_cast<SubCamara*>(pData); // convertimos el IData a SubCamara para poder compararlo
             if (potencial == compare->getPotencial()){
                 return 0;
@@ -43,7 +42,7 @@ class SubCamara : public IData{
             return -1;
         }
 
-        string toString(){
+        string toString(){ // imprime la información de la subcámara.
             string str = "Potencial: " + to_string(potencial) + " Distancia: " + to_string(distancia) + " Mineral: " + to_string(mineral) + " Distancia Total: " + to_string(getDistanciaTotal());
             return str;
         }
@@ -78,19 +77,20 @@ class SubCamara : public IData{
             return mineralAzul;
         }
 
-        void setMineralAzul(int pMineral){
+        void setMineralAzul(int pMineral){ // usamos mutex para proteger que dos threads la intenten acceder y modifiar.
             mtx->lock();
             mineralAzul = pMineral;
             mtx->unlock();
         }
 
         int decMineralAzul(int number, int totalRecogido, int capacity){
+            // función para decrementar la cantidad de mineral azul.
             mtx->lock();
             if (number > mineralAzul){
-                number = mineralAzul;
+                number = mineralAzul; // si intentamos coger más de lo que hay, cogemos todo lo que se puede.
             }
             if ((totalRecogido + number) > capacity){
-                // si intenta recoger mas de lo que puede, recoge solo lo que puede.
+                // si intenta recoger mas de lo que puede cargar, recoge solo lo que puede.
                 number = capacity - totalRecogido;
             }
             mineralAzul -= number;
@@ -115,10 +115,10 @@ class SubCamara : public IData{
         int decMineralRojo(int number, int totalRecogido, int capacity){
             mtx->lock();
             if (number > mineralRojo){
-                number = mineralRojo;
+                number = mineralRojo;  // si intentamos coger más de lo que hay, cogemos todo lo que se puede.
             }
             if ((totalRecogido + number) > capacity){
-                // si intenta recoger mas de lo que puede, recojo solo lo que se pueda.
+                // si intenta recoger mas de lo que puede cargar, recojo solo lo que se pueda.
                 number = capacity - totalRecogido;
             }
             mineralRojo -= number;
@@ -138,10 +138,6 @@ class SubCamara : public IData{
             return distancia + subCamaraParent->getDistanciaTotal();
         }
 
-        void setDistanciaTotal(int pDistanciaTotal){
-            distanciaTotal = pDistanciaTotal;
-        }
-
         void setPosition(AVL_Node *pPosition){
             position = pPosition;
         }
@@ -150,9 +146,10 @@ class SubCamara : public IData{
             return position;
         }
 
-        SubCamara* getParent(){
+        SubCamara* getParent(){ // función para encontrar la subcámara padre directamente.
             AVL_Node* parentNode = position->getParent();
             if (parentNode){
+                // si hay parent Node, casteamos su IData para obtener la subcámara padre.
                 SubCamara* parentSubCamara = dynamic_cast<SubCamara*>(parentNode->getData());
                 return parentSubCamara;
             }
@@ -160,14 +157,14 @@ class SubCamara : public IData{
             return nullptr;
         }
         
-        SubCamara* getLeft(){
+        SubCamara* getLeft(){ // función para obtener la subcámara hija izquierda directamente.
             if(position->getLeft()){ // si hay un hijo izquierdo, retornamos el contenido del nodo como una subcamara
                 return dynamic_cast<SubCamara*>(position->getLeft()->getData());
             }
             return nullptr; // si no hay hijo izquierdo, retornamos nulo.
         }
 
-        SubCamara* getRight(){
+        SubCamara* getRight(){ // función para obtener la subcámara hija derecha directamente.
             if(position->getRight()){ // si hay un hijo derecho, retornamos el contenido del nodo como una subcamara
                 return dynamic_cast<SubCamara*>(position->getRight()->getData());
             }

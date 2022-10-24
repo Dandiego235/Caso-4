@@ -11,16 +11,9 @@ using namespace std;
 class RandomStrat : public Estrategia{
     public:
         void play (thread *pThread, Personaje *minero){
-            stack = new List<int>();
-            index = new int();
-            *index = minero->getPuerta()->getQuantity() - 1; // metemos el índice de la última puerta de la puerta origen.
-            stack->push(index);
             int mineralAgarrado = 0;
 
             while (pThread->joinable()){
-                if (nextDoor == -1){ // si ya terminó de recorrer las puertas, se sale.
-                    return;
-                }
                 cout << "El " << minero->getName() << " está en la Puerta " << minero->getPuerta()->getId() << endl;
 
                 if (minero->getPuerta()->getCamara() && camarasVisitadas.find(minero->getPuerta()->getId()) == camarasVisitadas.end()){
@@ -32,7 +25,7 @@ class RandomStrat : public Estrategia{
 
                     mineralRecogido = 0;
 
-                    SubCamara* paths[3];
+                    SubCamara* paths[3]; // array para almacenar las tres posibilidades de caminos.
 
                     while (true){
                         SubCamara* left = minero->getSubCamara()->getLeft();
@@ -40,7 +33,7 @@ class RandomStrat : public Estrategia{
                         SubCamara* parent = minero->getSubCamara()->getParent();
                         paths[0] = left;
                         paths[1] = right;
-                        paths[2] = parent;
+                        paths[2] = parent; // meto las posibilidades en el arreglo
 
                         if (!minero->getSubCamara()->getParent()){ // si llegue a la raiz, entrego el mineral que he acumulado.
                             if (pThread->joinable()){ // si todavía puede trabajar.
@@ -53,43 +46,48 @@ class RandomStrat : public Estrategia{
                                 if (!salir){
                                     break;
                                 }
-                                int side = Random::rand_num(0, 2);
+                                int side = Random::rand_num(0, 2); // escogemos el subarbol aleatoriamente.
                                 if (side){
                                     minero->setSubCamara(right);
                                 } else {
                                     minero->setSubCamara(left);
                                 }
+
                                 cout << "El " << minero->getName() << " está caminando " << minero->getSubCamara()->getDistancia() << endl;
                                 this_thread::sleep_for(chrono::duration<float>(minero->getSubCamara()->getDistancia()/minero->getSpeed()));
                                 continue;
                             } else {
-                                return;
+                                return; // si no podemos trabajar, salimos
                             }
                         } else {
                             if (minero->readMineral(parent) != 0){ // si el padre no está vacío.
-                                int direccion;
+                                int direccion; // direccion que va a tomar.
+
                                 if (mineralRecogido != minero->getCapacity()){
+                                    // si el minero todavia no se ha llenado
                                     mineralAgarrado = minero->takeMineral(minero->getSubCamara(), Random::rand_num(0, minero->getCapacity() + 1), 
                                     mineralRecogido, minero->getCapacity());
                                     mineralRecogido += mineralAgarrado;
+                                    //agarra una cantidad aleatoria de mineral.
 
                                     cout << "El " << minero->getName() << " recogió " << mineralAgarrado << " minerales." << endl;
 
                                     if (mineralRecogido != minero->getCapacity() && minero->readMineral(minero->getSubCamara()) != 0){
+                                        // si el minero no esta lleno y la camara no está vacía
                                         do{
                                             direccion = Random::rand_num(0,3); // generamos una direccion del 0 al 2
                                         } while (!paths[direccion]);
                                         // si la subcamara quedó con un nullptr, intentamos conseguir un puntero no nulo. 
                                     } else {
                                         direccion = 2;
-                                        // si el minero vacio la camara se devuelve al padre.
+                                        // si el minero vació la camara se devuelve al padre.
                                     }
                                 } else {
                                     direccion = 2;
                                     // si el minero esta lleno, se devuelve hasta la raiz.
                                 }
                                 if (direccion != 2){
-                                       minero->setSubCamara(paths[direccion]);
+                                    minero->setSubCamara(paths[direccion]); // nos movemos en la direccion generada.
                                     cout << "El " << minero->getName() << " está caminando " << minero->getSubCamara()->getDistancia() << endl;
                                     this_thread::sleep_for(chrono::duration<float>(minero->getSubCamara()->getDistancia()/minero->getSpeed())); 
                                 } else {
@@ -113,10 +111,6 @@ class RandomStrat : public Estrategia{
         }
 
         void topo(thread *pThread, Personaje *minero){
-            stack = new List<int>();
-            index = new int();
-            *index = minero->getPuerta()->getQuantity() - 1; // metemos el índice de la última puerta de la puerta origen.
-            stack->push(index);
             int mineralAgarrado = 0;
             bool change;
 

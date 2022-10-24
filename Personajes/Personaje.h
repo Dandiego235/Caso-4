@@ -19,7 +19,6 @@ class Personaje{
         Camara *camara;
         SubCamara *subcamara;
         SubCamara *raiz;
-        SubCamara *subcamaraPtr;
         int mineralAcumulado;
 
     public:
@@ -71,8 +70,8 @@ class Personaje{
 
         void setCamara(Camara* pCamara){
             camara = pCamara;
-            setRaiz(dynamic_cast<SubCamara*>(camara->getRaiz()->getData()));
-            setSubCamara(raiz);
+            setRaiz(dynamic_cast<SubCamara*>(camara->getRaiz()->getData())); // establecemos la raiz del arbol de una vez.
+            setSubCamara(raiz); // la camara empieza siendo la raiz del arbol
         }
 
         SubCamara* getSubCamara(){
@@ -85,7 +84,7 @@ class Personaje{
 
         // función que retorna la cantidad de mineral en una subcámara dependiendo del color del jugador
         int readMineral(SubCamara *pSubCamara){
-            if (pSubCamara == nullptr){
+            if (pSubCamara == nullptr){ // si el puntero a la subcamara es nulo, retornamos -1
                 return -1;
             }
             if (jugador){ // si es rojo.
@@ -104,6 +103,7 @@ class Personaje{
             }
         }
 
+        // Función que coge el mineral de una subcámara pero deja 1, para no eliminar sus subcámaras.
         int leaveOne(SubCamara* pSubCamara, int pMineralRecogido){
             int mineralAgarrado;
             if (readMineral(pSubCamara) <= capacity){ // si la cantidad es menor o igual al capacity.

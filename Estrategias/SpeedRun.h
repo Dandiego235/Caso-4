@@ -15,16 +15,7 @@ using namespace std;
     solamente a los hijos de la cámara raíz y caminar la menor distancia.
     Solamente va a una subcamara si tiene una distancia menor a 50 metros.
 */
-
-
 class SpeedRun : public Estrategia{
-    /*private:
-        Stack<int>* stack; // pila para guardar los índices y recorrer las ultimas de primero.
-        int* index; // puntero que voy a usar para meter y extraer índices de la pila.
-        int nextDoor; // índice a la siguiente puerta donde voy a entrar.
-        unordered_set<int> camarasVisitadas; // almacenamos las puertas donde están las cámaras a donde entramos
-        int mineralRecogido;*/
-
     public:
         void play(thread *pThread, Personaje *minero){
             stack = new List<int>();
@@ -33,24 +24,17 @@ class SpeedRun : public Estrategia{
             stack->push(index);
             
             while (pThread->joinable()){
-                if (nextDoor == -1){
+                if (nextDoor == -1){ // revisamos si ya terminamos de recorrer las puertas.
                     return;
                 }
                 cout << "El " << minero->getName() << " está en la Puerta " << minero->getPuerta()->getId() << endl;
 
                 if (minero->getPuerta()->getCamara() && camarasVisitadas.find(minero->getPuerta()->getId()) == camarasVisitadas.end()){
                     // si la puerta tiene una camara que no he visitado ya.
-                    
-                    //cout << index << " " << puerta->getId() << endl;
 
                     minero->setCamara(minero->getPuerta()->getCamara()); // la camara del minero es donde entró
 
                     cout << "El " << minero->getName() << " entró en la cámara de la puerta " << minero->getPuerta()->getId() << endl;
-
-                    /*cout << "Izquierda: " << minero->readMineral(minero->getSubCamara()->getLeft()) <<
-                    " Distancia: " << minero->getSubCamara()->getLeft()->getDistancia() << 
-                    " Derecha: " << minero->readMineral(minero->getSubCamara()->getRight()) <<
-                     " Distancia: " << minero->getSubCamara()->getRight()->getDistancia() << endl;*/
 
                     SubCamara* left = minero->getSubCamara()->getLeft();
                     SubCamara* right = minero->getSubCamara()->getRight();
@@ -107,11 +91,6 @@ class SpeedRun : public Estrategia{
                     minero->setCamara(minero->getPuerta()->getCamara()); // la camara del minero es donde entró
 
                     cout << "El " << minero->getName() << " encontró una cámara en la puerta " << minero->getPuerta()->getId() << endl;
-
-                    /*cout << "Izquierda: " << minero->readMineral(minero->getSubCamara()->getLeft()) <<
-                    " Distancia: " << minero->getSubCamara()->getLeft()->getDistancia() << 
-                    " Derecha: " << minero->readMineral(minero->getSubCamara()->getRight()) <<
-                     " Distancia: " << minero->getSubCamara()->getRight()->getDistancia() << endl;*/
 
                     SubCamara* left = minero->getSubCamara()->getLeft();
                     SubCamara* right = minero->getSubCamara()->getRight();

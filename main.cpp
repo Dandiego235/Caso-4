@@ -26,18 +26,6 @@ int main(){
     Puerta* puertaPtr = new Puerta();
     puertaPtr->printNetwork();
 
-    /*Personaje *personajePtr;
-    personajePtr = new Explorador(false, puertaPtr);
-
-    GameTimer timer(120.0f);
-    thread timerThread(&GameTimer::start, &timer); // inciamos el timer para el jugador azul
-
-    Estrategia *strategy = new SpeedRun();
-    thread *mineroThread = new thread(&Personaje::play, personajePtr, &timerThread, strategy);
-
-    timerThread.join();
-    mineroThread->join();*/
-
     bool turnos[] = {false, true};
 
     Personaje* personajesJug [2][CANT_PUERTAS];
@@ -56,30 +44,6 @@ int main(){
 
     Estrategia *estrategiaPtr;
 
-    /*GameTimer timer(120.0f);
-    thread timerThread(&GameTimer::start, &timer); // inciamos el timer para el jugador azul
-
-    cout << "Jugador Azul" << endl;
-    
-    thread* threadsAzules [CANT_MINEROS];
-
-    Personaje *personajePtr;
-
-    Personaje* personajesAzules[CANT_MINEROS];
-    unordered_map<char, Estrategia*> estrategias;
-
-    Estrategia *estrategiaPtr = new SpeedRun();
-    estrategias['1'] = estrategiaPtr;*/
-
-    /*estrategiaPtr = new Conservador();
-    estrategias['2'] = estrategiaPtr;
-
-    estrategiaPtr = new Deep();
-    estrategias['3'] = estrategiaPtr;
-
-    estrategiaPtr = new TryHard();
-    estrategias['4'] = estrategiaPtr;*/
-
     for (int index = 0; index < CANT_JUGADORES; index++){
         int minero = 0;
         char choice;
@@ -91,7 +55,7 @@ int main(){
 
         while (minero < CANT_MINEROS){
             cout << "Ingrese el número para el tipo de minero que desea crear: \n1. Explorador\n2. Carguero\n3. Topo\n" << endl;
-            orig_buf = cout.rdbuf();
+            orig_buf = cout.rdbuf(); // desactivamos la salida estandar para que los mensajes de los mineros no estorben.
             cout.rdbuf(NULL);
             cin >> choice;
             switch(choice){
@@ -108,11 +72,11 @@ int main(){
                     cout << "ERROR: La opción ingresada no es válida" << endl;
                     continue;
             }
-            cout.rdbuf(orig_buf);
+            cout.rdbuf(orig_buf); // restauramos la salida estandar
             cout << "Ingrese la estrategia para " << personajePtr->getName() << endl;
             cout << "1. SpeedRun\n2. Deep\n3. Conservador\n4. RandomStrat" << endl;
             orig_buf = cout.rdbuf();
-            cout.rdbuf(NULL);
+            cout.rdbuf(NULL); // desactivamos la salida estandar para que los mensajes de los mineros no estorben.
             cin >> choice;
             switch(choice){
                 case '1':
@@ -140,7 +104,7 @@ int main(){
         timerThread.join();
         orig_buf = cout.rdbuf();
         cout.rdbuf(NULL);
-        scores[index] = 0;
+        scores[index] = 0;  // desactivamos la salida estandar para que los mensajes de los mineros no estorben.
         for(int personaje = 0; personaje < CANT_MINEROS; personaje++){
             threadsJugadores[index][personaje]->join();
             scores[index] += personajesJug[index][personaje]->getMineralAcumulado();
@@ -159,21 +123,5 @@ int main(){
     } else {
         cout << "Los jugadores han empatado." << endl;
     }
-
-    /*Explorador *explorador = new Explorador(false, puertaPtr);
-
-    Explorador *explorador2 = new Explorador(true, puertaPtr);
-
-    
-    
-    thread exploradorThread(&Explorador::play, explorador, &timerThread);
-
-    thread explorador2Thread(&Explorador::play, explorador2, &timerThread);
-
-    timerThread.join();
-
-    exploradorThread.join();
-
-    explorador2Thread.join();*/
 }
 
