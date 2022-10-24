@@ -173,6 +173,7 @@ class SubCamara : public IData{
             }
             return nullptr; // si no hay hijo derecho, retornamos nulo.
         }
+        
 };
 
 #endif

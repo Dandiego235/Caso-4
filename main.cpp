@@ -8,7 +8,7 @@
 #include "Estrategias/SpeedRun.h"
 #include "Estrategias/Conservador.h"
 #include "Estrategias/Deep.h"
-//#include "Estrategias/TryHard.h"
+#include "Estrategias/RandomStrat.h"
 #include <iostream>
 #include <thread>
 
@@ -16,9 +16,9 @@ using namespace std;
 
 #define CANT_PUERTAS 15
 
-#define CANT_MINEROS 1
+#define CANT_MINEROS 3
 
-#define CANT_JUGADORES 1
+#define CANT_JUGADORES 2
 
 int Puerta::totalPuertas = CANT_PUERTAS;
 
@@ -110,7 +110,7 @@ int main(){
             }
             cout.rdbuf(orig_buf);
             cout << "Ingrese la estrategia para " << personajePtr->getName() << endl;
-            cout << "1. SpeedRun\n2. Deep\n3. Conservador\n4. TryHard" << endl;
+            cout << "1. SpeedRun\n2. Deep\n3. Conservador\n4. RandomStrat" << endl;
             orig_buf = cout.rdbuf();
             cout.rdbuf(NULL);
             cin >> choice;
@@ -124,6 +124,9 @@ int main(){
                 case '3':
                     estrategiaPtr = new Conservador();
                     break;
+                case '4':
+                    estrategiaPtr = new RandomStrat();
+                    break;
                 default:
                     cout << "ERROR: La opción ingresada no es válida" << endl;
                     continue;
@@ -135,12 +138,14 @@ int main(){
 
         cout.rdbuf(orig_buf);
         timerThread.join();
-
+        orig_buf = cout.rdbuf();
+        cout.rdbuf(NULL);
         scores[index] = 0;
         for(int personaje = 0; personaje < CANT_MINEROS; personaje++){
             threadsJugadores[index][personaje]->join();
             scores[index] += personajesJug[index][personaje]->getMineralAcumulado();
         }
+        cout.rdbuf(orig_buf);
     }
     
 
